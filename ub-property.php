@@ -83,37 +83,165 @@ function ub_property_register_enter_title( $input ) {
 add_action( 'cmb2_admin_init', 'ub_property_register_custom_metabox' );
 function ub_property_register_custom_metabox() {
 	$prefix = '_ubp_';
-
-	$cmb_demo = new_cmb2_box( array(
-		'id'            => $prefix . 'metabox',
-		'title'         => esc_html__( 'Test Metabox', 'cmb2' ),
+	
+	//For New Property
+	$cmb_new_property = new_cmb2_box( array(
+		'id'            => $prefix . 'new_property',
+		'title'         => esc_html__( 'New Property', 'ub-utility-manager' ),
 		'object_types'  => array( 'ub_property' ), // Post type
 	) );
-
-	$cmb_demo->add_field( array(
-		'name'       => esc_html__( 'Test Text', 'cmb2' ),
-		'desc'       => esc_html__( 'field description (optional)', 'cmb2' ),
-		'id'         => $prefix . 'text',
+	
+	$cmb_new_property->add_field( array(
+		'name'       => esc_html__( 'Owner\'s Phone Number', 'ub-utility-manager' ),
+		'id'         => $prefix . 'owner_phone_number',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', // function should return a bool value
-		// 'sanitization_cb' => 'my_custom_sanitization', // custom sanitization callback parameter
-		// 'escape_cb'       => 'my_custom_escaping',  // custom escaping callback parameter
-		// 'on_front'        => false, // Optionally designate a field to wp-admin only
-		// 'repeatable'      => true,
-		// 'column'          => true, // Display field value in the admin post-listing columns
 	) );
-
-	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Small', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
-		'id'   => $prefix . 'textsmall',
-		'type' => 'text_small',
-		// 'repeatable' => true,
-		// 'column' => array(
-		// 	'name'     => esc_html__( 'Column Title', 'cmb2' ), // Set the admin column title
-		// 	'position' => 2, // Set as the second column.
-		// );
-		// 'display_cb' => 'yourprefix_display_text_small_column', // Output the display of the column values through a callback.
+	
+	$cmb_new_property->add_field( array(
+		'name' => esc_html__( 'Property Manager', 'ub-utility-manager' ),
+		'desc'       => esc_html__( 'Same as Property Manager', 'ub-utility-manager' ),
+		'id'   => $prefix . 'property_manager',
+		'type' => 'checkbox',
+	) );
+	
+	$cmb_new_property->add_field( array(
+		'name'       => esc_html__( 'Street Address', 'ub-utility-manager' ),
+		'id'         => $prefix . 'street_address',
+		'type'       => 'text',
+	) );
+	
+	$cmb_new_property->add_field( array(
+		'name'       => esc_html__( 'City', 'ub-utility-manager' ),
+		'id'         => $prefix . 'city',
+		'type'       => 'text',
+	) );
+	
+	global $states_full_key;
+	$cmb_new_property->add_field( array(
+		'name'             => esc_html__( 'State', 'ub-utility-manager' ),
+		'id'               => $prefix . 'state',
+		'type'             => 'select',
+		'options'          => $states_full_key,
+	) );
+	
+	$cmb_new_property->add_field( array(
+		'name'       => esc_html__( 'Zipcode', 'ub-utility-manager' ),
+		'id'         => $prefix . 'zipcode',
+		'type'       => 'text',
+	) );
+	
+	//For Utility Gas
+	$cmb_utility_gas = new_cmb2_box( array(
+		'id'            => $prefix . 'utility_gas',
+		'title'         => esc_html__( 'Utility Gas', 'ub-utility-manager' ),
+		'object_types'  => array( 'ub_property' ), // Post type
+	) );
+	
+	$cmb_utility_gas->add_field( array(
+		'name' => esc_html__( 'Gas', 'ub-utility-manager' ),
+		'desc'       => esc_html__( 'Gas', 'ub-utility-manager' ),
+		'id'   => $prefix . 'gas',
+		'type' => 'checkbox',
+	) );
+	
+	$cmb_utility_gas->add_field( array(
+		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
+		'id'         => $prefix . 'gas_provider',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_gas->add_field( array(
+		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
+		'id'         => $prefix . 'gas_utility_name',
+		'type'       => 'text', 
+	) );
+	
+	$cmb_utility_gas->add_field( array(
+		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
+		'id'         => $prefix . 'gas_account_number',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_gas->add_field( array(
+		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'id'   => $prefix . 'gas_pdf',
+		'type' => 'file',
+	) );
+	
+	//For Utility Water
+	$cmb_utility_water = new_cmb2_box( array(
+		'id'            => $prefix . 'utility_water',
+		'title'         => esc_html__( 'Utility Water', 'ub-utility-manager' ),
+		'object_types'  => array( 'ub_property' ), // Post type
+	) );
+	
+	$cmb_utility_water->add_field( array(
+		'name' => esc_html__( 'Water', 'ub-utility-manager' ),
+		'desc'       => esc_html__( 'Water', 'ub-utility-manager' ),
+		'id'   => $prefix . 'water',
+		'type' => 'checkbox',
+	) );
+	
+	$cmb_utility_water->add_field( array(
+		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
+		'id'         => $prefix . 'water_provider',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_water->add_field( array(
+		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
+		'id'         => $prefix . 'water_utility_name',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_water->add_field( array(
+		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
+		'id'         => $prefix . 'water_account_number',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_water->add_field( array(
+		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'id'   => $prefix . 'water_pdf',
+		'type' => 'file',
+	) );
+	
+	//For Utility Electricity
+	$cmb_utility_electricity = new_cmb2_box( array(
+		'id'            => $prefix . 'utility_electricity',
+		'title'         => esc_html__( 'Utility Electricity', 'ub-utility-manager' ),
+		'object_types'  => array( 'ub_property' ), // Post type
+	) );
+	
+	$cmb_utility_electricity->add_field( array(
+		'name' => esc_html__( 'Electricity', 'ub-utility-manager' ),
+		'desc'       => esc_html__( 'Electricity', 'ub-utility-manager' ),
+		'id'   => $prefix . 'electricity',
+		'type' => 'checkbox',
+	) );
+	
+	$cmb_utility_electricity->add_field( array(
+		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
+		'id'         => $prefix . 'electricity_provider',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_electricity->add_field( array(
+		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
+		'id'         => $prefix . 'electricity_utility_name',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_electricity->add_field( array(
+		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
+		'id'         => $prefix . 'electricity_account_number',
+		'type'       => 'text',
+	) );
+	
+	$cmb_utility_electricity->add_field( array(
+		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'id'   => $prefix . 'electricity_pdf',
+		'type' => 'file',
 	) );
 
 
