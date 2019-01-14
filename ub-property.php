@@ -95,7 +95,6 @@ function ub_property_register_custom_metabox() {
 		'name'       => esc_html__( 'Owner\'s Phone Number', 'ub-utility-manager' ),
 		'id'         => $prefix . 'owner_phone_number',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_new_property->add_field( array(
@@ -109,33 +108,26 @@ function ub_property_register_custom_metabox() {
 		'name'       => esc_html__( 'Street Address', 'ub-utility-manager' ),
 		'id'         => $prefix . 'street_address',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_new_property->add_field( array(
 		'name'       => esc_html__( 'City', 'ub-utility-manager' ),
 		'id'         => $prefix . 'city',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
+	global $states_full_key;
 	$cmb_new_property->add_field( array(
 		'name'             => esc_html__( 'State', 'ub-utility-manager' ),
 		'id'               => $prefix . 'state',
 		'type'             => 'select',
-		'show_option_none' => true,
-		'options'          => array(
-			'state1' => esc_html__( 'State One', 'ub-utility-manager' ),
-			'state2' => esc_html__( 'State Two', 'ub-utility-manager' ),
-			'state3' => esc_html__( 'State Three', 'ub-utility-manager' ),
-		),
+		'options'          => $states_full_key,
 	) );
 	
 	$cmb_new_property->add_field( array(
 		'name'       => esc_html__( 'Zipcode', 'ub-utility-manager' ),
 		'id'         => $prefix . 'zipcode',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	//For Utility Gas
@@ -156,21 +148,18 @@ function ub_property_register_custom_metabox() {
 		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
 		'id'         => $prefix . 'gas_provider',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_gas->add_field( array(
 		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
 		'id'         => $prefix . 'gas_utility_name',
-		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
+		'type'       => 'text', 
 	) );
 	
 	$cmb_utility_gas->add_field( array(
 		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
 		'id'         => $prefix . 'gas_account_number',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_gas->add_field( array(
@@ -197,21 +186,18 @@ function ub_property_register_custom_metabox() {
 		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
 		'id'         => $prefix . 'water_provider',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_water->add_field( array(
 		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
 		'id'         => $prefix . 'water_utility_name',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_water->add_field( array(
 		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
 		'id'         => $prefix . 'water_account_number',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_water->add_field( array(
@@ -238,21 +224,18 @@ function ub_property_register_custom_metabox() {
 		'name'       => esc_html__( 'Provider', 'ub-utility-manager' ),
 		'id'         => $prefix . 'electricity_provider',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_electricity->add_field( array(
 		'name'       => esc_html__( 'Name on Utilities', 'ub-utility-manager' ),
 		'id'         => $prefix . 'electricity_utility_name',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_electricity->add_field( array(
 		'name'       => esc_html__( 'Confirmation/Account Number', 'ub-utility-manager' ),
 		'id'         => $prefix . 'electricity_account_number',
 		'type'       => 'text',
-		'show_on_cb' => 'yourprefix_hide_if_no_cats', 
 	) );
 	
 	$cmb_utility_electricity->add_field( array(
