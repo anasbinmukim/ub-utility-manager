@@ -8,3 +8,5 @@ require_once( UBUMANAGER_BASE_FOLDER . '/ub-property.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/ub-user-account-fields.php');
 
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/form-user-account.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/form-register-property.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/my-property.php');
