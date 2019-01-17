@@ -1,0 +1,35 @@
+.error{ color: #ff0000; }
+.ub-form-wrap{ max-width: 800px; margin: 0 auto; }
+.ub-form-content{
+  width: 100%;
+  height: auto;
+  float: left;
+  padding: 20px;
+  margin-bottom: 50px;
+  border: 1px solid #dadada;
+  -webkit-box-shadow: 0px -1px 10px 0px rgba(119,119,119,1);
+  -moz-box-shadow: 0px -1px 10px 0px rgba(119,119,119,1);
+  box-shadow: 0px -1px 10px 0px rgba(119,119,119,1);
+  background-image: url('images/box-gradient.jpg');
+  background-repeat: repeat-x;
+  background-position: center bottom;
+  background-color: #fff;
+}
+.ub-form-header{
+  text-align: center;
+  margin: -20px -20px 50px -20px;
+  background: linear-gradient(to right,rgba(220,255,213,1) 0%,rgba(153,222,205,1) 100%);
+  /* box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.2); */
+}
+.ub-form-header h2{ margin: 0; padding: 10px 50px; }
+
+.ub-card-info-wrap {
+    border: 1px solid #dadada;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.add-more-card{
+  float: right;
+  padding: 2px 10px !important;
+}
