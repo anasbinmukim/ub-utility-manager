@@ -8,8 +8,6 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
     'form_type' => 'new',
 		'account_id' => 0
   ), $atts));
-	wp_enqueue_style('ub-manager-front');
-	wp_enqueue_style('ub-bootstrap');
 
 	$current_page_url = get_permalink();
 
