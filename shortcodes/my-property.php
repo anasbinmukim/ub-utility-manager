@@ -59,7 +59,7 @@ function ub_my_property_shortcode($atts){
 
 	  <?php
 
-	if(isset($_POST['search_property'])){
+	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['street_address']) && !empty($_POST['state'])))){
 		$city = $_POST['city'];
 		$street_address = $_POST['street_address'];
 		$zipcode = $_POST['zipcode'];
@@ -97,7 +97,7 @@ function ub_my_property_shortcode($atts){
 			   )
 			)
 		);
-	}elseif(!isset($_POST['street_address']) && !isset($_POST['city']) && !isset($_POST['zipcode']) && !isset($_POST['state'])){
+	}else{
 		$args = array(
 			'post_type' => 'ub_property',
 			'posts_per_page' => $count,
@@ -146,7 +146,7 @@ function ub_my_property_shortcode($atts){
 	wp_reset_query();
 
 	?>
-	<div><!-- ub-form-content -->
+	</div><!-- ub-form-content -->
 </div><!-- ub-form-wrap -->
 	<?php
 
