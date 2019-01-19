@@ -11,6 +11,13 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 
 	$current_page_url = get_permalink();
 
+	//Message successfully updated
+	if(isset($_GET['account-signup-success']) && ($_GET['account-signup-success'] == 'yes') && !is_user_logged_in()){
+			$display_message = 'Successfully registered! Please login to edit your account!';
+			echo ub_action_message($display_message, 'info');
+			return;
+	}
+
 	if(is_user_logged_in()){
 			$account_id = get_current_user_id();
 			$account_info = get_userdata($account_id);
@@ -18,24 +25,26 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 	}elseif(isset($_GET['account-signup']) && (!is_user_logged_in())){
 		$submission_type = 'new';
 		$params_url = array('account-signup' => 'dosignup');
-		$current_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
-	}else{
+		$action_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
+	}elseif(!isset($_GET['account-signup']) && (!is_user_logged_in())){
 			$submission_type = 'view';
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
-			//return;
+			return;
 	}
 
 	if(isset($_GET['account-edit'])){
 			$submission_type = 'update';
 			$params_url = array('account-edit' => 'doedit');
-			$current_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
+			$action_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
 	}
 
-
-
-
-
+	//Message successfully updated
+	if(isset($_GET['account-update-success']) && ($_GET['account-update-success'] == 'yes')){
+			$submission_type = 'view';
+			$display_message = 'Successfully updated!';
+			echo ub_action_message($display_message, 'info');
+	}
 
 
 	ob_start();
@@ -96,6 +105,11 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 				$meta_data_update = false;
 		}
 
+		//don't update role if logged in as administrator.
+		if( current_user_can('administrator')) {
+			$accounttype = 'administrator';
+		}
+
 
 
 		if(($submission_type == 'new') && ($meta_data_update)){
@@ -143,8 +157,16 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 				}
 		}
 
-		if(($submission_type == 'new') || ($submission_type == 'update')){
-				echo '<script type="text/javascript">window.location = "'.$current_page_url.'"</script>';
+		if(($submission_type == 'new')){
+				$params_url = array('account-signup-success' => 'yes');
+				$redirect_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
+				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
+		}
+
+		if(($submission_type == 'update')){
+				$params_url = array('account-update-success' => 'yes');
+				$redirect_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
+				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
 		}
 
 	}elseif(is_user_logged_in()){
@@ -195,7 +217,7 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 						<h2>Account Information</h2>
 					<?php } ?>
 				</div><!-- ub-form-header -->
-				<form id="account-data-form" class="form-horizontal" action="<?php echo esc_url($current_page_url); ?>" method="post">
+				<form id="account-data-form" class="form-horizontal" action="<?php echo esc_url($action_page_url); ?>" method="post">
 					<div class="row">
 						<div class="col-6 col-md-6">
 							<h4>Personal Information:</h4>
