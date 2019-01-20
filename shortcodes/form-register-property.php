@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 //Add Property
 add_shortcode('ub_register_property', 'ub_register_property_shortcode');
@@ -6,8 +9,40 @@ function ub_register_property_shortcode(){
 	ob_start();
 
 	$current_user_id = get_current_user_id();
-
+	$current_page_url = get_permalink();
+	$form_submitted = true;
+	
 	if(isset($_POST['add_property'])){
+	
+	if(!isset($_POST['utility_gas'])){
+		$form_submitted = true;
+	}elseif(isset($_POST['utility_gas']) && (($_POST['gas_provider'] != '') && ($_POST['gas_utilities'] != '') && ($_POST['gas_confirmation'] != ''))){
+		$form_submitted = true;
+	}else{	
+		$display_message = 'All gas fields required!';
+		echo ub_action_message($display_message, 'danger');
+	}
+	
+	if(!isset($_POST['utility_water'])){
+		$form_submitted = true;
+	}elseif(isset($_POST['utility_water']) && (($_POST['water_provider'] != '') && ($_POST['water_utilities'] != '') && ($_POST['water_confirmation'] != ''))){
+		$form_submitted = true;
+	}else{	
+		$display_message = 'All water fields required!';
+		echo ub_action_message($display_message, 'danger');
+	}
+	
+	if(!isset($_POST['utility_electricity'])){
+		$form_submitted = true;
+	}elseif(isset($_POST['utility_electricity']) && (($_POST['electricity_provider'] != '') && ($_POST['electricityr_utilities'] != '') && ($_POST['electricity_confirmation'] != ''))){
+		$form_submitted = true;
+	}else{	
+		$display_message = 'All electricity fields required!';
+		echo ub_action_message($display_message, 'danger');
+	}
+	
+
+	if($form_submitted){
 		$property_data = array(
 			'post_type'      => 'ub_property',
 			'post_title'     => sanitize_text_field( $_POST['owner_name']  ),
@@ -38,7 +73,7 @@ function ub_register_property_shortcode(){
 		update_post_meta( $property_id, '_ubp_water_provider', sanitize_text_field( $_POST['water_provider'] ) );
 		update_post_meta( $property_id, '_ubp_water_utility_name', sanitize_text_field( $_POST['water_utilities'] ) );
 		update_post_meta( $property_id, '_ubp_water_account_number', sanitize_text_field( $_POST['water_confirmation'] ) );
-		if(isset($_POST['utility_water'] )){
+		if(isset($_POST['utility_electricity'] )){
 			update_post_meta( $property_id, '_ubp_electricity', sanitize_text_field( $_POST['utility_electricity'] ) );
 		}
 		update_post_meta( $property_id, '_ubp_electricity_provider', sanitize_text_field( $_POST['electricity_provider'] ) );
@@ -46,20 +81,21 @@ function ub_register_property_shortcode(){
 		update_post_meta( $property_id, '_ubp_electricity_account_number', sanitize_text_field( $_POST['electricity_confirmation'] ) );
 
 	}
+	}
 	?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
-	<form action="" method="POST">
+	<form action="<?php echo esc_url($current_page_url); ?>" method="POST" id="registration-form">
 	<div class="row">
 		<div class="col-md-3">
 			<h4>New Property</h4>
 			<div class="form-group">
 				<label for="owner_name">Owner's Name</label>
-				<input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="">
+				<input type="text" class="form-control required" id="owner_name" name="owner_name" placeholder="">
 			</div>
 			<div class="form-group">
 				<label for="phone">Owner's Phone Number</label>
-				<input type="text" class="form-control" id="phone" name="phone" placeholder="">
+				<input type="text" class="form-control required" id="phone" name="phone" placeholder="">
 			</div>
 			<div class="checkbox">
 				<label>
@@ -100,7 +136,7 @@ function ub_register_property_shortcode(){
 				<div class="col-md-4">
 					<div class="checkbox">
 						<label>
-						  <input type="checkbox" value="on" name="utility_gas"> Gas
+						  <input type="checkbox" value="on" name="utility_gas" id="utility_gas"> Gas
 						</label>
 					</div>
 					<div class="form-group">
@@ -173,6 +209,12 @@ function ub_register_property_shortcode(){
 	</form>
 	<div><!-- ub-form-content -->
 </div><!-- ub-form-wrap -->
+
+<script>
+	jQuery(document).ready(function() {
+		jQuery("#registration-form").validate();
+	});
+</script>
 
 <?php
 	$output_value = ob_get_clean();
