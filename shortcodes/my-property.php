@@ -59,7 +59,7 @@ function ub_my_property_shortcode($atts){
 
 	  <?php
 
-	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['street_address']) && !empty($_POST['state'])))){
+	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['state']) && !empty($_POST['state'])))){
 		$city = $_POST['city'];
 		$street_address = $_POST['street_address'];
 		$zipcode = $_POST['zipcode'];
