@@ -74,6 +74,8 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 
 			wp_register_script( 'jquery-validation', UBUMANAGER_FOLDER_URL. 'js/jquery.validate.min.js', array( 'jquery' ), '5.0.0', true );
 			wp_enqueue_script( 'jquery-validation' );
+
+			wp_localize_script( 'jquery-validation', 'ub_ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     }
 
 		/**
