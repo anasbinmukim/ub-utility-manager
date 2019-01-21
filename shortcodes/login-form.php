@@ -1,5 +1,5 @@
 <?php
-//View Properties
+//Login form shortcode
 add_shortcode('ub_login_form', 'ub_login_form_shortcode');
 function ub_login_form_shortcode($atts){
 	extract(shortcode_atts(array(
