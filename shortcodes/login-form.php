@@ -33,14 +33,14 @@ function ub_login_form_shortcode($atts){
 		'label_username' => __( 'Username or Email' ),
 		'label_password' => __( 'Password' ),
 		'label_remember' => __( 'Remember Me' ),
-		'label_log_in'   => __( 'Log In' ),
+		'label_log_in'   => __( 'Submit' ),
 		'value_username' => '',
 		'value_remember' => false
 	);
 
 ?>
 <div class="ub-form-wrap">
-	<div class="ub-form-content">
+	<div class="ub-form-content login-form-wrap">
 		<div class="ub-form-header">
 				<h2>Login</h2>
 		</div><!-- ub-form-header -->
