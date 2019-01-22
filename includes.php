@@ -7,6 +7,7 @@ require_once( UBUMANAGER_BASE_FOLDER . '/functions.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/ub-fileupload.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/ub-property.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/ub-user-account-fields.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/setting-options.php');
 
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/login-form.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/form-user-account.php');

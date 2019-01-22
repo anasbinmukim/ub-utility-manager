@@ -8,9 +8,9 @@ function ub_dropdown_menus_shortcode($atts){
 	ob_start();
 	?>
 	
-	<div class="inner-menu_wrap">
+	<div class="inner-menu-wrap">
 		<ul>
-			<li class="main-menu"><a href="#">Account</a><i class="fa fa-angle-down"></i>
+			<li class="main-menu"><a href="<?php echo esc_url(get_permalink(get_option('ub_create_account'))); ?>">Account</a><i class="fa fa-angle-down"></i>
 				<ul class="sub-menu">
 					<li><a href="#">Edit Account Information</a></li>
 				</ul>
@@ -18,7 +18,7 @@ function ub_dropdown_menus_shortcode($atts){
 			<li class="main-menu"><a href="#">Properties</a><i class="fa fa-angle-down"></i>
 				<ul class="sub-menu">
 					<li><a href="#">Add/Remove Properties</a></li>
-					<li><a href="#">View My Properties</a></li>
+					<li><a href="<?php echo esc_url(get_permalink(get_option('ub_view_property')));  ?>">View My Properties</a></li>
 				</ul>
 			</li>
 			<li class="main-menu"><a href="#">Orders</a><i class="fa fa-angle-down"></i>
