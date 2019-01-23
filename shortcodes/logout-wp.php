@@ -6,8 +6,12 @@ function ub_logout_shortcode($atts){
 		'redirect' => get_permalink(),
 	), $atts));
 
+	if(!is_user_logged_in()){
+		return;
+	}
+
 	$output_result = wp_logout_url( $redirect );
-	$live_url = str_replace("https://", "", $output_result);
-	
-	return $live_url;
+	$logout_url = str_replace("https://", "", $output_result);
+
+	return $logout_url;
 }

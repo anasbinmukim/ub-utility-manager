@@ -6,6 +6,11 @@ function ub_login_form_shortcode($atts){
     'redirect' => '',
   ), $atts));
   ob_start();
+	if(is_user_logged_in()){
+		$display_message = 'You are already logged in.';
+		echo ub_action_message($display_message, 'info');
+		return;
+	}
 
 	if($redirect != ''){
 		$redirect_url = $redirect;
@@ -40,11 +45,11 @@ function ub_login_form_shortcode($atts){
 
 ?>
 <div class="ub-form-wrap">
-	<div class="ub-form-content login-form-wrap">
+	<div class="ub-form-content ub-login-form-wrap">
 		<div class="ub-form-header">
 				<h2>Login</h2>
 		</div><!-- ub-form-header -->
-		<a class="button new-user-signup" href="/account/?account-signup=dosignup">New User? Sign Up ></a>
+		<a class="button new-user-signup" href="<?php echo get_permalink(intval(get_option('ubp_create_account'))); ?>?account-signup=dosignup">New User? Sign Up ></a>
 		<?php wp_login_form( $args ); ?>
 
 	<div><!-- ub-form-content -->
