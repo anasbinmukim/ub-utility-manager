@@ -76,6 +76,12 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 			wp_enqueue_script( 'jquery-validation' );
 
 			wp_localize_script( 'jquery-validation', 'ub_ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+
+			// Load the datepicker script (pre-registered in WordPress).
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			// You need styling for the datepicker. For simplicity I've linked to Google's hosted jQuery UI CSS.
+			wp_register_style( 'jquery-ui', '//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css' );
+			wp_enqueue_style( 'jquery-ui' );
     }
 
 		/**

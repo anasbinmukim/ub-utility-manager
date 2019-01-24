@@ -16,10 +16,11 @@ function utility_manager_settings_page(){
 		//This is nonce error
 	}elseif(isset($_POST['ub_setting_submit'])){
 
-		update_option( 'ubp_register_property', sanitize_text_field($_POST['ubp_register_property']));
-		update_option( 'ubp_view_property', sanitize_text_field($_POST['ubp_view_property']));
-		update_option( 'ubp_create_account', sanitize_text_field($_POST['ubp_create_account']));
-
+		update_option( 'ubp_register_property', intval($_POST['ubp_register_property']));
+		update_option( 'ubp_view_property', intval($_POST['ubp_view_property']));
+		update_option( 'ubp_create_account', intval($_POST['ubp_create_account']));
+		update_option( 'ubp_create_order', intval($_POST['ubp_create_order']));
+		update_option( 'ubp_review_order', intval($_POST['ubp_review_order']));
     ?>
 
     <div class="updated"><p><?php echo esc_html__('Successfully Updated', 'ub-utility-manager'); ?></p></div>
@@ -76,6 +77,36 @@ function utility_manager_settings_page(){
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
 							<option <?php selected($ubp_create_account, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('Create Order', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubp_create_order" id="ubp_create_order">
+						<?php
+							$ubp_create_order = intval(get_option('ubp_create_order'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubp_create_order, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('Review Order', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubp_review_order" id="ubp_review_order">
+						<?php
+							$ubp_review_order = intval(get_option('ubp_review_order'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubp_review_order, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>

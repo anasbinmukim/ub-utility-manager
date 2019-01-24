@@ -3,9 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'wp_enqueue_scripts', 'enqueue_load_font_awesome' );
-function enqueue_load_font_awesome() {
-	wp_enqueue_style( 'load-fa', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' );
+function ub_debug($data, $die = false){
+	echo '<pre>';
+	print_r($data);
+	echo '</pre>';
+	if($die){
+		die();
+	}
 }
 
 function ub_get_current_user_role() {
