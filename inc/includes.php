@@ -15,7 +15,7 @@ require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/login-form.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/form-user-account.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/form-register-property.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/my-property.php');
-require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/my-orders.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/view-orders.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/logout-wp.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/dropdown-menus.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/create-order.php');
