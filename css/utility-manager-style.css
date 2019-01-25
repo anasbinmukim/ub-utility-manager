@@ -115,3 +115,41 @@
 .inner-menu-wrap ul li{list-style: none;}
 .inner-menu-wrap .main-menu a{font-size: 20px; font-style: italic; color: #232323;}
 .inner-menu-wrap .sub-menu li a{font-size: 14px; font-style: italic; color: #232323;}
+
+.ub-new-connction-order select.form-control:not([size]):not([multiple]) {
+    height: 30px;
+	padding: 0;
+}
+.ub-new-connction-order button[name=search_property]{
+	padding: 0 3px;
+	background-image: linear-gradient(to right, #EAFFE6 , #C0EAE1);
+}
+.ub-new-connction-order button img {
+    max-width: 88%;
+    margin-top: 4px;
+}
+.ub-new-connction-order table tr:first-child{
+	background-image: linear-gradient(to right, #EAFFE6 , #C0EAE1);
+}
+.ub-new-connction-order .form-row .search-label{
+	color: #FDFDFD;
+}
+.ub-new-connction-order .ub-date-picker{
+	position: relative;
+}
+.ub-new-connction-order .ub-date-picker i {
+    position: absolute;
+    right: 27px;
+    font-size: 20px;
+    top: 12px;
+    border-left: 1px solid #BBBBBB;
+    padding-left: 7px;
+    height: 28px;
+    padding-top: 4px;
+}
+.ub-new-connction-order .btn-secondary{
+	padding: 4px 15px;
+}
+.ub-new-connction-order table input[type=text]{
+	max-width: 130px;
+}

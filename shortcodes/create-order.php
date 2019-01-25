@@ -80,7 +80,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 	}
 
 ?>
-<div class="ub-form-wrap">
+<div class="ub-form-wrap ub-new-connction-order">
 	<div class="ub-form-content">
 		<div class="only-heading">
 				<h2><?php echo $submitting_heading; ?></h2>
@@ -112,7 +112,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 					</select>
 				</div>
 				<div class="form-group col-md-1">
-					<label for="">Search</label>
+					<label for="" class="search-label">Search</label>
 					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
 				</div>
 			</div>
@@ -260,8 +260,8 @@ function ub_connect_disconnect_order_shortcode($atts){
 				?></td>
 			<?php } ?>
 
-			<td>
-				<input type="text" class="ub-datepicker" name="apply_date[]" value="" />
+			<td class="ub-date-picker" width="21%">
+				<input type="text" class="ub-datepicker" name="apply_date[]" value="" /><i class="fa fa-angle-down" aria-hidden="true"></i>
 				<input type="hidden" name="add_to_cart_products[]" value="<?php echo esc_attr($property_id); ?>" />
 			</td>
 		</tr>
@@ -273,7 +273,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 	<td colspan="9" align="right">
 		<?php wp_nonce_field( 'ub_connection_action', 'ub_connection_nonce' ); ?>
 		<input type="hidden" name="connection_type" value="<?php echo esc_attr($submit_type); ?>" />
-		<input type="submit" class="btn btn-primary" name="review_order" value="Review Order"/>
+		<input type="submit" class="btn btn-secondary" name="review_order" value="Review Order"/>
 	</td>
 	</tr>
 	</table>
