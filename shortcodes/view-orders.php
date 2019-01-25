@@ -1,7 +1,7 @@
 <?php
 //View Properties
-add_shortcode('ub_my_property', 'ub_my_property_shortcode');
-function ub_my_property_shortcode($atts){
+add_shortcode('ub_my_orders', 'ub_my_orders_shortcode');
+function ub_my_orders_shortcode($atts){
 	extract(shortcode_atts(array(
     'count' => '-1',
   ), $atts));

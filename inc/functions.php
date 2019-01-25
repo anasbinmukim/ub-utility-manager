@@ -3,6 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+function ub_debug($data, $die = false){
+	echo '<pre>';
+	print_r($data);
+	echo '</pre>';
+	if($die){
+		die();
+	}
+}
+
 function ub_get_current_user_role() {
     if( is_user_logged_in() ) {
       $user = wp_get_current_user();

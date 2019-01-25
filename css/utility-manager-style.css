@@ -33,3 +33,85 @@
   float: right;
   padding: 2px 10px !important;
 }
+
+.utility-file-wrap {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file{
+  position: relative;
+  overflow: hidden;
+}
+.upload-file-btn-wrap{
+  width: 140px;
+  float: right;
+  overflow: hidden;
+  position: relative;
+}
+.existing_file {
+    float: left;
+    width: 30px;
+}
+.pdf_icon {
+    width: 30px;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: #fff;
+    cursor: pointer;
+    display: block;
+}
+.btn-upload-file-label {
+    display: block;
+    margin-left: 15px;
+}
+
+.ub-login-form-wrap{
+	max-width: 400px;
+  margin: 0 auto;
+  float: none;
+	position: relative;
+}
+.ub-login-form-wrap label {
+    width: 100%;
+    margin-bottom: 10px;
+    font-style: italic;
+    font-size: 16px;
+}
+.ub-login-form-wrap input[type=text], .ub-login-form-wrap input[type=password]{
+	width: 100%;
+	height: 35px;
+}
+.ub-login-form-wrap [type=submit]{
+	padding: 5px 35px;
+	cursor: pointer;
+}
+.ub-login-form-wrap .new-user-signup{position: absolute; right: 20px;}
+.ub-login-form-wrap a {
+    color: #000000;
+    font-size: 16px;
+}
+.ub-login-form-wrap .login-submit{
+	text-align: center
+}
+
+.inner-menu-wrap{margin-bottom: 100px;}
+.inner-menu-wrap .main-menu{float: left; width: 33%; position: relative;}
+.inner-menu-wrap .main-menu .fa{font-size: 20px; margin-left: 8px;}
+.inner-menu-wrap .sub-menu{display: none; position: absolute; }
+.inner-menu-wrap .main-menu:hover .sub-menu{display: block; z-index: 99; }
+.inner-menu-wrap .sub-menu{width: 250px;}
+.inner-menu-wrap .sub-menu li{margin-left: -18px;}
+.inner-menu-wrap .sub-menu li::before { content: "+ ";}
+.inner-menu-wrap ul li{list-style: none;}
+.inner-menu-wrap .main-menu a{font-size: 20px; font-style: italic; color: #232323;}
+.inner-menu-wrap .sub-menu li a{font-size: 14px; font-style: italic; color: #232323;}

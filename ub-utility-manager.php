@@ -51,7 +51,7 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 		 */
 		public function init() {
 
-			require_once( UBUMANAGER_BASE_FOLDER . '/includes.php');
+			require_once( UBUMANAGER_BASE_FOLDER . '/inc/includes.php');
 
 			// Localisation
 			load_plugin_textdomain( 'ub-utility-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -74,6 +74,14 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 
 			wp_register_script( 'jquery-validation', UBUMANAGER_FOLDER_URL. 'js/jquery.validate.min.js', array( 'jquery' ), '5.0.0', true );
 			wp_enqueue_script( 'jquery-validation' );
+
+			wp_localize_script( 'jquery-validation', 'ub_ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+
+			// Load the datepicker script (pre-registered in WordPress).
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			// You need styling for the datepicker. For simplicity I've linked to Google's hosted jQuery UI CSS.
+			wp_register_style( 'jquery-ui', '//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css' );
+			wp_enqueue_style( 'jquery-ui' );
     }
 
 		/**
