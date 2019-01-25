@@ -51,7 +51,7 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 		 */
 		public function init() {
 
-			require_once( UBUMANAGER_BASE_FOLDER . '/includes.php');
+			require_once( UBUMANAGER_BASE_FOLDER . '/inc/includes.php');
 
 			// Localisation
 			load_plugin_textdomain( 'ub-utility-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );

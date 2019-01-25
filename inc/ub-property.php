@@ -66,7 +66,7 @@ function ub_utility_manager_property_custom_post(){
 			'query_var'             => true,
 			'rewrite'               => array( 'slug' => 'property-category' ),
 	);
-	register_taxonomy( 'ub_property_category', 'ub_property', $args_property_category );
+	//register_taxonomy( 'ub_property_category', 'ub_property', $args_property_category );
 
 }
 

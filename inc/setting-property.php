@@ -3,18 +3,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'admin_menu', 'ub_manager_admin_settings_menu');
+add_action( 'admin_menu', 'ub_manager_admin_property_settings_menu');
 
-function ub_manager_admin_settings_menu() {
-  add_submenu_page('edit.php?post_type=ub_property', esc_html__( 'Utility Manager Settings' ), esc_html__( 'Settings' ), 'administrator', 'utility-manager-properties', 'utility_manager_settings_page'
+function ub_manager_admin_property_settings_menu() {
+  add_submenu_page('edit.php?post_type=ub_property', esc_html__( 'Utility Manager Settings' ), esc_html__( 'Settings' ), 'administrator', 'utility-manager-properties', 'utility_manager_property_settings_page'
   );
 }
 
-function utility_manager_settings_page(){
+function utility_manager_property_settings_page(){
 
-	if ( isset($_POST['ub_setting_nonce']) && (! isset( $_POST['ub_setting_nonce'] ) || ! wp_verify_nonce( $_POST['ub_setting_nonce'], 'ub_setting_action' ) ) ) {
+	if ( isset($_POST['ubp_setting_nonce']) && (! isset( $_POST['ubp_setting_nonce'] ) || ! wp_verify_nonce( $_POST['ubp_setting_nonce'], 'ubp_setting_action' ) ) ) {
 		//This is nonce error
-	}elseif(isset($_POST['ub_setting_submit'])){
+	}elseif(isset($_POST['ubp_setting_submit'])){
 
 		update_option( 'ubp_register_property', intval($_POST['ubp_register_property']));
 		update_option( 'ubp_view_property', intval($_POST['ubp_view_property']));
@@ -28,7 +28,7 @@ function utility_manager_settings_page(){
     <?php }	?>
 
     <div class="wrap">
-      <h2><?php echo esc_html__('Utility Manager Settings', 'ub-utility-manager'); ?></h2>
+      <h2><?php echo esc_html__('Property Settings', 'ub-utility-manager'); ?></h2>
       <form name="utility_manager_settings" method="post">
 
       <table class="form-table">
@@ -115,7 +115,8 @@ function utility_manager_settings_page(){
 			<tr valign="top">
 				<th scope="row"><label for="blogname"></label></th>
 				<td>
-				<?php wp_nonce_field( 'ub_setting_action', 'ub_setting_nonce' ); ?><input type="submit" class="button button-primary button-large" value="Save" id="ub_setting_submit" name="ub_setting_submit"></td>
+				<?php wp_nonce_field( 'ubp_setting_action', 'ubp_setting_nonce' ); ?>
+				<input type="submit" class="button button-primary button-large" value="Save" id="ubp_setting_submit" name="ubp_setting_submit"></td>
 			</tr>
 
 
