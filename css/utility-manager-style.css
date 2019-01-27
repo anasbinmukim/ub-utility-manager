@@ -153,3 +153,28 @@
 .ub-new-connction-order table input[type=text]{
 	max-width: 130px;
 }
+
+.ub-new-account, .ub-new-employee{
+	max-width: 500px;
+    margin: 0 auto;
+    float: none;
+}
+.ub-new-account h4 {
+	background-image: linear-gradient(to right, #EAFFE6 , #C0EAE1);
+    text-align: center;
+    width: 102%;
+    font-size: 23px;
+	padding: 20px 5px;
+    margin: -20px -7px 50px -5px;
+}
+
+.ub-new-employee select.form-control:not([size]):not([multiple]) {
+    height: 30px;
+	padding: 0;
+}
+.ub-new-employee .para{
+	margin-bottom: 15px;
+}
+.ub-new-employee .label-space{
+	margin-top: 8px;
+}
