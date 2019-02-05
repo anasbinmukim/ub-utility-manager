@@ -2,16 +2,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-//Connection disconnection
-add_shortcode('connect_disconnect_order', 'ub_connect_disconnect_order_shortcode');
-function ub_connect_disconnect_order_shortcode($atts){
+//My Employees
+add_shortcode('ub_my_employees', 'ub_my_employees_shortcode');
+function ub_my_employees_shortcode($atts){
 	extract(shortcode_atts(array(
-    'submit_type' => 'connect',
 		'count' => '-1'
   ), $atts));
   ob_start();
 
-	if(!is_user_logged_in()){
+	/* if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
 			return;
@@ -46,7 +45,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 			}
 		}
 
-		//ub_debug($total_cart_items);
+		
 		$review_order_url = get_permalink(get_option('ubp_review_order'));
 
 		if($connection_type == 'connect'){
@@ -77,19 +76,19 @@ function ub_connect_disconnect_order_shortcode($atts){
 		 $submitting_heading = 'New Disconnection Order';
 		 $params_url = array('submit_type' => 'disconnect');
 		 $action_url = esc_url( add_query_arg( $params_url, $current_page_url) );
-	}
+	} */
 
 ?>
 <div class="ub-form-wrap ub-new-connction-order">
 	<div class="ub-form-content">
 		<div class="only-heading">
-				<h2><?php echo $submitting_heading; ?></h2>
+				<h2><?php //echo $submitting_heading; ?></h2>
 		</div>
 		<form action="" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-4">
-					<label for="street_address">Street Address</label>
-					<input type="text" class="form-control" name="street_address" id="street_address">
+					<label for="ub_name">Name</label>
+					<input type="text" class="form-control" name="ub_name" id="ub_name">
 				</div>
 				<div class="form-group col-md-3">
 					<label for="city">City</label>
@@ -118,26 +117,21 @@ function ub_connect_disconnect_order_shortcode($atts){
 			</div>
 		</form>
 <div class="conn-dis-order">
-<form action="<?php echo $action_url; ?>" method="post">
+<form action="<?php //echo $action_url; ?>" method="post">
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="9" align="center">My Properties</td>
+			<td colspan="4" align="center">My Employees</td>
 		</tr>
 		<tr>
 			<td><input type="checkbox" name="" class="select-all"/></td>
-			<td>Street Address</td>
-			<td>City</td>
-			<td>Zipcode</td>
-			<td>State</td>
-			<td><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/gas-icon.png" alt=""/></td>
-			<td><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/water-icon.png" alt=""/></td>
-			<td><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/electric-icon.png" alt=""/></td>
-			<td>Connect Date</td>
+			<td>Name</td>
+			<td>Account Type</td>
+			<td>Action</td>
 		</tr>
 
 	  <?php
 
-	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['state']) && !empty($_POST['state'])))){
+	/* if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['state']) && !empty($_POST['state'])))){
 		$city = $_POST['city'];
 		$street_address = $_POST['street_address'];
 		$zipcode = $_POST['zipcode'];
@@ -204,89 +198,35 @@ function ub_connect_disconnect_order_shortcode($atts){
 		//connected, disconnected
 		$ubp_gas_status = get_post_meta($property_id, '_ubp_gas_status', true);
 		$ubp_water_status = get_post_meta($property_id, '_ubp_water_status', true);
-		$ubp_electricity_status = get_post_meta($property_id, '_ubp_electricity_status', true);
+		$ubp_electricity_status = get_post_meta($property_id, '_ubp_electricity_status', true); */
 		?>
 		<tr>
 			<td>
-				<input type="checkbox" name="select_all_utility[]" class="select-available select-available-<? echo esc_attr($countproperty); ?>"/>
-				<?php if ( current_user_can('manage_options') ){ ?>
-					<a target="_blank" class="edit-property" href="<?php echo get_permalink(get_option('ubp_register_property')); ?>?edit_property=<?php echo $property_id; ?>">Edit</a>
-				<?php } ?>
+				<input type="checkbox" name="select_all_employee[]" class="select-available select-available-<?php //echo esc_attr($countproperty); ?>"/>				
 			</td>
-			<td><?php echo esc_html($ubp_street_address); ?></td>
-			<td><?php echo esc_html($ubp_city); ?></td>
-			<td><?php echo esc_html($ubp_zipcode); ?></td>
-			<td><?php echo esc_html($ubp_state); ?></td>
-
-			<?php if($submit_type == 'connect'){ ?>
-				<td><?php if(($ubp_gas == 'on') && ($ubp_gas_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}elseif(($ubp_gas == 'on') && ($ubp_gas_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}elseif(($ubp_gas == 'on') && ($ubp_gas_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}
-				?></td>
-				<td><?php if(($ubp_water == 'on') && ($ubp_water_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}elseif(($ubp_water == 'on') && ($ubp_water_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}elseif(($ubp_water == 'on') && ($ubp_water_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}
-				?></td>
-				<td><?php if(($ubp_electricity == 'on') && ($ubp_electricity_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}elseif(($ubp_electricity == 'on') && ($ubp_electricity_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}elseif(($ubp_electricity == 'on') && ($ubp_electricity_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}
-				?></td>
-			<?php } ?>
+			<td><?php //echo esc_html($ubp_street_address); ?></td>			
+			<td><?php //echo esc_html($ubp_street_address); ?></td>			
 
 			<td class="ub-date-picker" width="21%">
 				<input type="text" class="ub-datepicker" name="apply_date[]" value="" /><i class="fa fa-angle-down" aria-hidden="true"></i>
-				<input type="hidden" name="add_to_cart_products[]" value="<?php echo esc_attr($property_id); ?>" />
+				<input type="hidden" name="" value="" />
 			</td>
 		</tr>
 	<?php
-	$countproperty++;
-	endwhile;
+	//$countproperty++;
+	//endwhile;
 	?>
 	<tr>
-	<td colspan="9" align="right">
-		<?php wp_nonce_field( 'ub_connection_action', 'ub_connection_nonce' ); ?>
-		<input type="hidden" name="connection_type" value="<?php echo esc_attr($submit_type); ?>" />
-		<input type="submit" class="btn btn-secondary" name="review_order" value="Review Order"/>
+	<td colspan="4" align="right">
+		<?php wp_nonce_field( 'ub_employee_action', 'ub_employee_nonce' ); ?>
+		<input type="hidden" name="" value="" />
+		<input type="submit" class="btn btn-secondary" name="employee_confirm" value="Confirm"/>
 	</td>
 	</tr>
 	</table>
-	<?php }else{ ?>
-	 </table>
-	<?php
-	  echo 'No property found';
-  }
-  echo '</form>';
-  echo '</div>';
-  wp_reset_query();
 
-	?>
+	</form>
+	</div>
 	</div><!-- ub-form-content -->
 </div><!-- ub-form-wrap -->
 <script>
@@ -316,4 +256,4 @@ jQuery(document).ready(function($) {
 
 	$output_result = ob_get_clean();
 	return $output_result;
-}//
+}
