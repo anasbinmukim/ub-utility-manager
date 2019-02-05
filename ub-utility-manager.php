@@ -57,8 +57,9 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 			load_plugin_textdomain( 'ub-utility-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
       if(isset($_GET['addrole']) && ($_GET['addrole'] == 'do')){
-        add_role( 'property_manager', 'Property Manager', array( 'read' => true, 'level_2' => true ) );
-        add_role( 'homeowner', 'Homeowner', array( 'read' => true, 'level_2' => true ) );
+        //add_role( 'property_manager', 'Property Manager', array( 'read' => true, 'level_2' => true ) );
+        //add_role( 'homeowner', 'Homeowner', array( 'read' => true, 'level_2' => true ) );
+				add_role( 'employee', 'Employee', array( 'read' => true, 'level_1' => true ) );
         //remove_role( 'homewoner' );
       }
 
