@@ -203,7 +203,11 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 		$ub_cardinfo = '';
 	}
 	?>
-
+	<?php
+		if(is_user_logged_in()){
+			echo do_shortcode('[ub_dropdown_menus]');
+		}
+	?>
 	<div class="ub-form-wrap">
 		<div class="ub-form-content">
 				<div class="ub-form-header">

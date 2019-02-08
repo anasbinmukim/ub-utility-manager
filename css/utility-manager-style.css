@@ -107,7 +107,7 @@
 .inner-menu-wrap{margin-bottom: 100px;}
 .inner-menu-wrap .main-menu{float: left; width: 33%; position: relative;}
 .inner-menu-wrap .main-menu .fa{font-size: 20px; margin-left: 8px;}
-.inner-menu-wrap .sub-menu{display: none; position: absolute; }
+.inner-menu-wrap .sub-menu{ position: absolute; }
 .inner-menu-wrap .main-menu:hover .sub-menu{display: block; z-index: 99; }
 .inner-menu-wrap .sub-menu{width: 250px;}
 .inner-menu-wrap .sub-menu li{margin-left: -18px;}
