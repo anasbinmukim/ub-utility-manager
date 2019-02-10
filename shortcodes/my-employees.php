@@ -7,76 +7,39 @@ add_shortcode('ub_my_employees', 'ub_my_employees_shortcode');
 function ub_my_employees_shortcode($atts){
 	extract(shortcode_atts(array(
 		'count' => '-1'
-  ), $atts));
+	), $atts));
+	
+	require_once(ABSPATH.'wp-admin/includes/user.php' );
+  
   ob_start();
 
-	/* if(!is_user_logged_in()){
+	if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
 			return;
 	}
-
-	$property_author_id = get_current_user_id();
-	$current_user_id = get_current_user_id();
-	$current_page_url = get_permalink();
-
-	if (isset($_POST['ub_connection_nonce']) && (! isset( $_POST['ub_connection_nonce'] ) || ! wp_verify_nonce( $_POST['ub_connection_nonce'], 'ub_connection_action' ) ) ) {
-		//This is nonce error
-	}elseif(isset($_POST['review_order']) && (isset($_POST['add_to_cart_products']))){
-
-
-		$connection_type = $_POST['connection_type'];
-
-		$add_to_cart_products = $_POST['add_to_cart_products'];
-		$check_utility_gas = $_POST['check_utility_gas'];
-		$check_utility_water = $_POST['check_utility_water'];
-		$check_utility_electricity = $_POST['check_utility_electricity'];
-		$apply_date = $_POST['apply_date'];
-
-		$total_cart_items = array();
-		foreach ($add_to_cart_products as $pkey => $product_id) {
-			if((isset($check_utility_gas[$pkey]) && ($check_utility_gas[$pkey] == 'yes')) || (isset($check_utility_water[$pkey]) && ($check_utility_water[$pkey] == 'yes')) || (isset($check_utility_electricity[$pkey]) && ($check_utility_electricity[$pkey] == 'yes'))){
-				$total_cart_items[$product_id] = array(
-					'gas' => esc_html($check_utility_gas[$pkey]),
-					'water' => esc_html($check_utility_water[$pkey]),
-					'electricity' => esc_html($check_utility_electricity[$pkey]),
-					'apply_date' => esc_html($apply_date[$pkey])
-				);
-			}
-		}
-
+	
+	if((ub_get_current_user_role() != 'property_manager') && !is_admin()){
+		$display_message = 'Only property manager can access this page.';
+		echo ub_action_message($display_message, 'info');
+		return;
+	}
+	
+	$property_manager_id = get_current_user_id();
+	
+	if(isset($_GET['delete_employee_id'])){
+		$delete_employee_id =$_GET['delete_employee_id'];
 		
-		$review_order_url = get_permalink(get_option('ubp_review_order'));
-
-		if($connection_type == 'connect'){
-				update_user_meta($current_user_id, '_ub_connect_cart_items', $total_cart_items);
-				$params_url = array('order_type' => 'connect');
-				$redirect_page_url = esc_url( add_query_arg( $params_url, $review_order_url) );
-				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
-
+		$employee_ids = get_user_meta($property_manager_id, '_ub_employee_ids', true);
+		$employee_ids = array_diff($employee_ids, array($delete_employee_id));
+		update_user_meta( $property_manager_id, '_ub_employee_ids', $employee_ids );
+		
+		$employee_delete = wp_delete_user($delete_employee_id);
+		if($employee_delete){
+			$display_message = 'Employee deleted successfully.';
+			echo ub_action_message($display_message, 'info');
 		}
-
-		if($connection_type == 'disconnect'){
-				update_user_meta($current_user_id, '_ub_disconnect_cart_items', $total_cart_items);
-				$params_url = array('order_type' => 'disconnect');
-				$redirect_page_url = esc_url( add_query_arg( $params_url, $review_order_url) );
-				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
-		}
-
 	}
-
-	if($submit_type == 'connect'){
-			$cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
-			$submitting_heading = 'New Connection Order';
-			$params_url = array('submit_type' => 'connect');
-			$action_url = esc_url( add_query_arg( $params_url, $current_page_url) );
-	}
-	if($submit_type == 'disconnect'){
-		 $cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
-		 $submitting_heading = 'New Disconnection Order';
-		 $params_url = array('submit_type' => 'disconnect');
-		 $action_url = esc_url( add_query_arg( $params_url, $current_page_url) );
-	} */
 
 ?>
 <div class="ub-form-wrap ub-new-connction-order">
@@ -117,141 +80,46 @@ function ub_my_employees_shortcode($atts){
 			</div>
 		</form>
 <div class="conn-dis-order">
-<form action="<?php //echo $action_url; ?>" method="post">
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="4" align="center">My Employees</td>
+			<td colspan="3" align="center">My Employees</td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" name="" class="select-all"/></td>
 			<td>Name</td>
-			<td>Account Type</td>
+			<td>Email</td>
 			<td>Action</td>
 		</tr>
-
-	  <?php
-
-	/* if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['state']) && !empty($_POST['state'])))){
-		$city = $_POST['city'];
-		$street_address = $_POST['street_address'];
-		$zipcode = $_POST['zipcode'];
-		$state = $_POST['state'];
-		$args = array(
-			'post_type' => 'ub_property',
-			'posts_per_page' => $count,
-			'author' => $property_author_id,
-			'orderby' => 'menu_order',
-			'order' => 'ASC',
-			'meta_query' => array(
-			   'relation' => 'OR',
-			   array(
-				 'key' => '_ubp_street_address',
-				 'value' => $street_address,
-				 'type' => 'CHAR',
-				 'compare' => '='
-			   ),
-			   array(
-				 'key' => '_ubp_city',
-				 'value' => $city,
-				 'type' => 'CHAR',
-				 'compare' => '='
-			   ),
-			   array(
-				 'key' => '_ubp_zipcode',
-				 'value' => $zipcode,
-				 'type' => 'CHAR',
-				 'compare' => '='
-			   ),
-			   array(
-				 'key' => '_ubp_state',
-				 'value' => $state,
-				 'type' => 'CHAR',
-				 'compare' => '='
-			   )
-			)
-		);
-	}else{
-		$args = array(
-			'post_type' => 'ub_property',
-			'posts_per_page' => $count,
-			'author' => $property_author_id,
-			'orderby' => 'menu_order',
-			'order' => 'ASC'
-		);
-	}
-
-	$property_posts = new WP_Query($args);
-	if($property_posts->have_posts()){
-	$countproperty = 1;
-	while($property_posts->have_posts()): $property_posts->the_post();
-		$property_id = get_the_ID();
-		//$property_title = get_the_title();
-		$ubp_street_address = get_post_meta($property_id, '_ubp_street_address', true);
-		$ubp_city = get_post_meta($property_id, '_ubp_city', true);
-		$ubp_zipcode = get_post_meta($property_id, '_ubp_zipcode', true);
-		$ubp_state = get_post_meta($property_id, '_ubp_state', true);
-
-		$ubp_gas = get_post_meta($property_id, '_ubp_gas', true);
-		$ubp_water = get_post_meta($property_id, '_ubp_water', true);
-		$ubp_electricity = get_post_meta($property_id, '_ubp_electricity', true);
-
-		//connected, disconnected
-		$ubp_gas_status = get_post_meta($property_id, '_ubp_gas_status', true);
-		$ubp_water_status = get_post_meta($property_id, '_ubp_water_status', true);
-		$ubp_electricity_status = get_post_meta($property_id, '_ubp_electricity_status', true); */
-		?>
-		<tr>
-			<td>
-				<input type="checkbox" name="select_all_employee[]" class="select-available select-available-<?php //echo esc_attr($countproperty); ?>"/>				
-			</td>
-			<td><?php //echo esc_html($ubp_street_address); ?></td>			
-			<td><?php //echo esc_html($ubp_street_address); ?></td>			
-
-			<td class="ub-date-picker" width="21%">
-				<input type="text" class="ub-datepicker" name="apply_date[]" value="" /><i class="fa fa-angle-down" aria-hidden="true"></i>
-				<input type="hidden" name="" value="" />
-			</td>
-		</tr>
 	<?php
-	//$countproperty++;
-	//endwhile;
+		$args = array(
+			'role'         => 'employee',
+			'order'        => 'ASC',
+			'meta_query'   => array(
+				array(
+                'relation' => 'AND',
+					array(
+						'key' => '_ub_property_manager_id',
+						'value' => $property_manager_id,
+						'compare' => "=",
+						'type' => 'numeric'
+					)
+				)
+			)
+		 ); 
+		$all_employees = get_users( $args ); 
+		//ub_debug($all_employees);
+		foreach($all_employees as $employee){
 	?>
-	<tr>
-	<td colspan="4" align="right">
-		<?php wp_nonce_field( 'ub_employee_action', 'ub_employee_nonce' ); ?>
-		<input type="hidden" name="" value="" />
-		<input type="submit" class="btn btn-secondary" name="employee_confirm" value="Confirm"/>
-	</td>
-	</tr>
+		<tr>
+			<td><?php echo $employee->display_name; ?></td>		
+			<td><?php echo $employee->user_email; ?></td>			
+			<td><a href="?delete_employee_id=<?php echo $employee->ID; ?>">Delete</a></td>
+		</tr>
+	<?php } ?>
 	</table>
-
-	</form>
 	</div>
 	</div><!-- ub-form-content -->
 </div><!-- ub-form-wrap -->
-<script>
-jQuery(document).ready(function($) {
-		$( ".ub-datepicker" ).datepicker({
-        dateFormat : "mm/dd/yy"
-    });
-    $('.select-all').click(function() {
-			if ($(this).is(':checked')) {
-				$('.conn-dis-order input').attr('checked', true);
-			} else {
-				$('.conn-dis-order input').attr('checked', false);
-			}
-		});
 
-		$('.check_flag').click(function() {
-			if ($(this).is(':checked')) {
-				$(this).closest('td').children('.check_value').val('yes');
-			} else {
-				$(this).closest('td').children('.check_value').val('no');
-			}
-		});
-
-});
-</script>
 	<?php
 
 	$output_result = ob_get_clean();
