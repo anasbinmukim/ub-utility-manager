@@ -86,7 +86,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 ?>
 <?php
 	if(is_user_logged_in()){
-		echo do_shortcode('[ub_dropdown_menus]');
+		echo do_shortcode('[ub_inner_menus]');
 	}
 ?>
 <div class="ub-form-wrap ub-new-connction-order">

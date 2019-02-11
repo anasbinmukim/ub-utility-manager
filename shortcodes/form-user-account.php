@@ -205,7 +205,7 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 	?>
 	<?php
 		if(is_user_logged_in()){
-			echo do_shortcode('[ub_dropdown_menus]');
+			echo do_shortcode('[ub_inner_menus]');
 		}
 	?>
 	<div class="ub-form-wrap">

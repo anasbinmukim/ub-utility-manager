@@ -147,6 +147,11 @@ function ub_review_order_shortcode($atts){
 		 }
 
 ?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
+?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 		<div class="ub-form-header">

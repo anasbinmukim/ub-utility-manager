@@ -76,7 +76,11 @@ function ub_confirm_orders_shortcode($atts){
 	}
 
 ?>
-
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
+?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 	<table class="table table-bordered">

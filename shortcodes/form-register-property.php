@@ -222,6 +222,11 @@ function ub_register_property_shortcode(){
 
 	}
 	?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
+?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 	<form action="<?php echo esc_url($current_page_url); ?>" method="POST" id="registration-form">

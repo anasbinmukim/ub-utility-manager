@@ -18,6 +18,8 @@ function utility_manager_property_settings_page(){
 		update_option( 'ubpid_register_property', intval($_POST['ubpid_register_property']));
 		update_option( 'ubpid_view_property', intval($_POST['ubpid_view_property']));
 		update_option( 'ubpid_create_account', intval($_POST['ubpid_create_account']));
+		update_option( 'ubpid_add_employee', intval($_POST['ubpid_add_employee']));
+		update_option( 'ubpid_manage_employee', intval($_POST['ubpid_manage_employee']));
     ?>
 
     <div class="updated"><p><?php echo esc_html__('Successfully Updated', 'ub-utility-manager'); ?></p></div>
@@ -74,6 +76,36 @@ function utility_manager_property_settings_page(){
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
 							<option <?php selected($ubpid_create_account, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('Add Employee', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubpid_add_employee" id="ubpid_add_employee">
+						<?php
+							$ubpid_add_employee = intval(get_option('ubpid_add_employee'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubpid_add_employee, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('Manage Employee', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubpid_manage_employee" id="ubpid_manage_employee">
+						<?php
+							$ubpid_manage_employee = intval(get_option('ubpid_manage_employee'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubpid_manage_employee, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>

@@ -16,6 +16,11 @@ function ub_my_orders_shortcode($atts){
 	$order_author_id = get_current_user_id();
 
 ?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
+?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 		<form action="" method="post">

@@ -3,14 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 //My Employees
-add_shortcode('ub_my_employees', 'ub_my_employees_shortcode');
-function ub_my_employees_shortcode($atts){
+add_shortcode('ub_manage_employees', 'ub_manage_employees_shortcode');
+function ub_manage_employees_shortcode($atts){
 	extract(shortcode_atts(array(
 		'count' => '-1'
 	), $atts));
-	
+
 	require_once(ABSPATH.'wp-admin/includes/user.php' );
-  
+
   ob_start();
 
 	if(!is_user_logged_in()){
@@ -18,22 +18,24 @@ function ub_my_employees_shortcode($atts){
 			echo ub_action_message($display_message, 'info');
 			return;
 	}
-	
-	if((ub_get_current_user_role() != 'property_manager') && !is_admin()){
+
+	if((ub_get_current_user_role() == 'property_manager') || (current_user_can('manage_options'))){
+		//should go well
+	}else{
 		$display_message = 'Only property manager can access this page.';
 		echo ub_action_message($display_message, 'info');
 		return;
 	}
-	
+
 	$property_manager_id = get_current_user_id();
-	
+
 	if(isset($_GET['delete_employee_id'])){
 		$delete_employee_id =$_GET['delete_employee_id'];
-		
+
 		$employee_ids = get_user_meta($property_manager_id, '_ub_employee_ids', true);
 		$employee_ids = array_diff($employee_ids, array($delete_employee_id));
 		update_user_meta( $property_manager_id, '_ub_employee_ids', $employee_ids );
-		
+
 		$employee_delete = wp_delete_user($delete_employee_id);
 		if($employee_delete){
 			$display_message = 'Employee deleted successfully.';
@@ -41,6 +43,11 @@ function ub_my_employees_shortcode($atts){
 		}
 	}
 
+?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
 ?>
 <div class="ub-form-wrap ub-new-connction-order">
 	<div class="ub-form-content">
@@ -104,14 +111,14 @@ function ub_my_employees_shortcode($atts){
 					)
 				)
 			)
-		 ); 
-		$all_employees = get_users( $args ); 
+		 );
+		$all_employees = get_users( $args );
 		//ub_debug($all_employees);
 		foreach($all_employees as $employee){
 	?>
 		<tr>
-			<td><?php echo $employee->display_name; ?></td>		
-			<td><?php echo $employee->user_email; ?></td>			
+			<td><?php echo $employee->display_name; ?></td>
+			<td><?php echo $employee->user_email; ?></td>
 			<td><a href="?delete_employee_id=<?php echo $employee->ID; ?>">Delete</a></td>
 		</tr>
 	<?php } ?>
