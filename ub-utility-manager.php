@@ -73,6 +73,8 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 			wp_register_style('ub-bootstrap', UBUMANAGER_FOLDER_URL. 'css/bootstrap.min.css' );
 			wp_enqueue_style('ub-bootstrap');
 
+			wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' );	
+
 			wp_register_script( 'jquery-validation', UBUMANAGER_FOLDER_URL. 'js/jquery.validate.min.js', array( 'jquery' ), '5.0.0', true );
 			wp_enqueue_script( 'jquery-validation' );
 

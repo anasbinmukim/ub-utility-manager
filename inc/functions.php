@@ -133,6 +133,8 @@ function ub_get_current_user_role() {
   function ub_order_status($order_id){
 			if(get_post_status ( $order_id ) == 'new'){
 					return 'New Order';
+			}elseif(get_post_status ( $order_id ) == 'complete'){
+					return 'Complete';
 			}else{
 				return '';
 			}
