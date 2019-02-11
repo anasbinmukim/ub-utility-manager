@@ -13,7 +13,8 @@
 		</li>
 		<li class="main-menu"><a href="<?php echo esc_url(get_permalink(get_option('ubpid_my_order')));  ?>">Orders</a><i class="fa fa-angle-down"></i>
 			<ul class="sub-menu">
-				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_create_order')));  ?>">Submit New Order</a></li>
+				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_create_order')));  ?>?submit_type=connect">Submit New Connect Order</a></li>
+				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_create_order')));  ?>?submit_type=disconnect">Submit New Disconnect Order</a></li>
 				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_my_order')));  ?>">View Orders</a></li>
 			</ul>
 		</li>

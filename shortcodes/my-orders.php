@@ -14,6 +14,9 @@ function ub_my_orders_shortcode($atts){
 	}
 
 	$order_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$order_author_id = get_user_meta($order_author_id, '_ub_property_manager_id', true);
+	}
 
 ?>
 <?php

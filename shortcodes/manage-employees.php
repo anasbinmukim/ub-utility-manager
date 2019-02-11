@@ -119,7 +119,7 @@ function ub_manage_employees_shortcode($atts){
 		<tr>
 			<td><?php echo $employee->display_name; ?></td>
 			<td><?php echo $employee->user_email; ?></td>
-			<td><a href="?delete_employee_id=<?php echo $employee->ID; ?>">Delete</a></td>
+			<td><a class="btn btn-secondary" href="?delete_employee_id=<?php echo $employee->ID; ?>">Delete</a></td>
 		</tr>
 	<?php } ?>
 	</table>

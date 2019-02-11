@@ -7,6 +7,17 @@ function ub_my_property_shortcode($atts){
   ), $atts));
   ob_start();
 
+	if(!is_user_logged_in()){
+		$display_message = 'You need to login to view this page';
+		echo ub_action_message($display_message, 'info');
+		return;
+	}
+
+	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
 ?>
 <?php
 	if(is_user_logged_in()){
@@ -63,7 +74,6 @@ function ub_my_property_shortcode($atts){
 		</tr>
 
 	  <?php
-
 	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && $_POST['street_address'] != '') || (isset($_POST['city']) && $_POST['city'] != '') || (isset($_POST['zipcode']) && $_POST['zipcode'] != '') || (isset($_POST['state']) && $_POST['state'] != ''))){
 		$city = $_POST['city'];
 		$street_address = $_POST['street_address'];
@@ -71,6 +81,7 @@ function ub_my_property_shortcode($atts){
 		$state = $_POST['state'];
 		$args = array(
 			'post_type' => 'ub_property',
+			'author' => $property_author_id,
 			'posts_per_page' => $count,
 			'orderby' => 'menu_order',
 			'order' => 'ASC',
@@ -105,6 +116,7 @@ function ub_my_property_shortcode($atts){
 	}else{
 		$args = array(
 			'post_type' => 'ub_property',
+			'author' => $property_author_id,
 			'posts_per_page' => $count,
 			'orderby' => 'menu_order',
 			'order' => 'ASC'

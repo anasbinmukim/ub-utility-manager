@@ -20,8 +20,13 @@ function ub_connect_disconnect_order_shortcode($atts){
 	if(isset($_GET['submit_type'])){
 			$submit_type = esc_html($_GET['submit_type']);
 	}
-
+	
 	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
+
 	$current_user_id = get_current_user_id();
 	$current_page_url = get_permalink();
 

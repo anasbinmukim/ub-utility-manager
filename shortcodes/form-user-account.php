@@ -9,6 +9,9 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 		'account_id' => 0
   ), $atts));
 
+	$new_signup_ok = false;
+	$profile_update_ok = false;
+
 	$current_page_url = get_permalink();
 
 	//Message successfully updated
@@ -105,6 +108,30 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 				$meta_data_update = false;
 		}
 
+		if($submission_type == 'new'){
+			$password = sanitize_text_field($_POST['password']);
+			$re_password = sanitize_text_field($_POST['re_password']);
+			if ( ($password !== $re_password) || ($password == '') ){
+					$display_message = 'Password does not match or empty. Please try again!';
+					echo ub_action_message($display_message, 'danger');
+					$meta_data_update = false;
+			}
+		}
+
+		$request_to_update_password = '';
+		if($submission_type == 'update--'){
+			$password = sanitize_text_field($_POST['password']);
+			$re_password = sanitize_text_field($_POST['re_password']);
+			if ( ($password !== $re_password) && ($password != '') ){
+					$display_message = 'Password does not match. Leave both field blank if you do not want to update password.';
+					echo ub_action_message($display_message, 'danger');
+					$meta_data_update = false;
+			}
+			if ( ($password == $re_password) && ($password != '') ){
+				$request_to_update_password = $password;
+			}
+		}
+
 		//don't update role if logged in as administrator.
 		if( current_user_can('administrator')) {
 			$accounttype = 'administrator';
@@ -113,7 +140,8 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 
 
 		if(($submission_type == 'new') && ($meta_data_update)){
-				$user_pass = wp_generate_password( 10, true, true );
+				//$user_pass = wp_generate_password( 10, true, true );
+				$user_pass = $password;
 				$userdata = array(
 					'user_pass' => $user_pass,
 					'user_login' => $email,
@@ -124,8 +152,17 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 					'role' => $accounttype,
 				);
 				$account_id = wp_insert_user( $userdata );
+				//wp_new_user_notification( $account_id );
+
+				$subject = 'Welcome to Utility Brothers';
+				$message = 'Your account have been successfully created!';
+				$message .= '<br /><br />Login Email: '.$email;
+				$message .= '<br />Login Password: '.$user_pass;
+				ub_send_email($email, $subject, $message);
+
 				$display_message = 'Successfully added! Please login to edit your account.';
 				echo ub_action_message($display_message, 'success');
+				$new_signup_ok = true;
 		}elseif(($submission_type == 'update')  && ($meta_data_update)){
 			$args_update = array(
 				'ID'         => $account_id,
@@ -139,6 +176,11 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 			$meta_data_update = TRUE;
 			$display_message = 'Successfully updated!';
 			echo ub_action_message($display_message, 'success');
+			$profile_update_ok = true;
+
+			if($request_to_update_password != ''){
+					//wp_update_user( array( 'ID' => $account_id, 'user_pass' => esc_attr( $request_to_update_password ) ) );
+			}
 		}
 
 		if($meta_data_update){
@@ -157,13 +199,13 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 				}
 		}
 
-		if(($submission_type == 'new')){
+		if(($submission_type == 'new') && $new_signup_ok){
 				$params_url = array('account-signup-success' => 'yes');
 				$redirect_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
 				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
 		}
 
-		if(($submission_type == 'update')){
+		if(($submission_type == 'update') && $profile_update_ok){
 				$params_url = array('account-update-success' => 'yes');
 				$redirect_page_url = esc_url( add_query_arg( $params_url, $current_page_url) );
 				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
@@ -202,6 +244,8 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 		$zip = '';
 		$ub_cardinfo = '';
 	}
+
+
 	?>
 	<?php
 		if(is_user_logged_in()){
@@ -213,9 +257,11 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 				<div class="ub-form-header">
 					<?php if($submission_type == 'new'){ ?>
 						<h2>New Account</h2>
+						<?php $password_required = 'required'; ?>
 					<?php } ?>
 					<?php if($submission_type == 'update'){ ?>
 						<h2>Edit Account</h2>
+						<?php $password_required = ''; ?>
 					<?php } ?>
 					<?php if($submission_type == 'view'){ ?>
 						<h2>Account Information</h2>
@@ -260,6 +306,20 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 									<input type="text" class="form-control required" id="email" name="email" placeholder="" value="<?php echo esc_attr($email); ?>">
 								</div>
 								</div>
+								<?php if(($submission_type == 'new')){ ?>
+								<div class="form-group form-row">
+									<label for="password" class="col-md-6">Password:</label>
+									<div class="col-md-6">
+										<input type="password" class="form-control <?php echo $password_required; ?>" id="password" name="password" placeholder="" value="">
+									</div>
+								</div>
+								<div class="form-group form-row">
+									<label for="re_password" class="col-md-6">Re. Enter Password:</label>
+									<div class="col-md-6">
+										<input type="password" class="form-control <?php echo $password_required; ?>" id="re_password" name="re_password" placeholder="" value="">
+									</div>
+								</div>
+								<?php } ?>
 								<div class="field-for-pro-manager">
 								<div class="form-group form-row" id="field-company-name">
 								<label for="company_name" class="col-md-6">Company Name:</label>

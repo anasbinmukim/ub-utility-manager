@@ -139,3 +139,13 @@ function ub_get_current_user_role() {
 				return '';
 			}
 	}
+
+	function ub_send_email($send_to, $subject, $message){
+		add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
+		//add_filter( 'wp_mail_from_name', function( $name ) { return get_option('quote_email_from_name'); });
+		//add_filter( 'wp_mail_from', function( $email ) { return get_option('quote_email_from_email'); });
+		$message .= '<br/><br/>Regards<br/>~Utility Brothers Team';
+		$message .= '<br />';
+		$message .= esc_url( home_url( '/' ) );
+		@wp_mail( $send_to, $subject, $message );
+	}

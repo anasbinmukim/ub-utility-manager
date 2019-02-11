@@ -25,6 +25,7 @@ function utility_manager_order_settings_page(){
 		update_option( 'ubp_electricity_charge', sanitize_text_field($_POST['ubp_electricity_charge']));
 		update_option( 'ubp_connect_term', intval($_POST['ubp_connect_term']));
 		update_option( 'ubp_disconnect_term', intval($_POST['ubp_disconnect_term']));
+		update_option( 'ub_order_admin_emails', sanitize_text_field($_POST['ub_order_admin_emails']));
 
     ?>
 
@@ -159,6 +160,14 @@ function utility_manager_order_settings_page(){
 						);
 						wp_dropdown_categories( $term_type_disconnect_args );
 					?>
+				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('Admin Notification Email', 'ub-utility-manager'); ?></th>
+				<td>
+					<?php $ub_order_admin_emails = get_option('ub_order_admin_emails'); ?>
+					<input class="text-large" type="text" name="ub_order_admin_emails" value="<?php echo esc_attr($ub_order_admin_emails); ?>" />
 				</td>
 			</tr>
 

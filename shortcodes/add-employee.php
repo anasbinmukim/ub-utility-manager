@@ -60,24 +60,33 @@ function ub_add_employee_shortcode_func( $atts ) {
 					'last_name' => $lname,
 					'role' => $accounttype,
 				);
-				$account_id = wp_insert_user( $userdata );
+				$employee_id = wp_insert_user( $userdata );
 
-				update_user_meta($account_id, '_ub_phone', $phone_num);
-				update_user_meta($account_id, '_ub_company_name', $company_name);
-				update_user_meta($account_id, '_ub_property_manager_id', $property_manager_id);
+				update_user_meta($employee_id, '_ub_phone', $phone_num);
+				update_user_meta($employee_id, '_ub_company_name', $company_name);
+				update_user_meta($employee_id, '_ub_property_manager_id', $property_manager_id);
 
 				$employee_ids = array();
 				$employee_ids = get_user_meta($property_manager_id, '_ub_employee_ids', true);
 				if(is_array($employee_ids)){
-					array_push($employee_ids, $account_id);
+					array_push($employee_ids, $employee_id);
 					update_user_meta( $property_manager_id, '_ub_employee_ids', $employee_ids );
 				}else{
-					$employee_id = array($account_id);
+					$employee_id = array($employee_id);
 					update_user_meta( $property_manager_id, '_ub_employee_ids', $employee_id );
 				}
 
+				$subject = 'Welcome to Utility Brothers';
+				$message = 'Your account have been successfully created!';
+				$message .= '<br /><br />Login Email: '.$ub_email;
+				$message .= '<br />Login Password: '.$password;
+				ub_send_email($ub_email, $subject, $message);
+
 				$display_message = 'Successfully added!';
 				echo ub_action_message($display_message, 'success');
+
+				$redirect_page_url = get_permalink(get_option('ubpid_manage_employee'));
+				echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
 
 		}
 
@@ -104,18 +113,6 @@ function ub_add_employee_shortcode_func( $atts ) {
 						</div>
 					</div>
 					<div class="form-group form-row">
-						<label for="password" class="col-md-6">Password:</label>
-						<div class="col-md-6">
-							<input type="password" class="form-control required" id="password" name="password" placeholder="" value="">
-						</div>
-					</div>
-					<div class="form-group form-row">
-						<label for="re_password" class="col-md-6">Re. Enter Password:</label>
-						<div class="col-md-6">
-							<input type="password" class="form-control required" id="re_password" name="re_password" placeholder="" value="">
-						</div>
-					</div>
-					<div class="form-group form-row">
 						<label for="fname" class="col-md-6">First Name:</label>
 						<div class="col-md-6">
 							<input type="text" class="form-control" id="fname" name="fname" placeholder="" value="">
@@ -137,6 +134,18 @@ function ub_add_employee_shortcode_func( $atts ) {
 						<label for="ub_email" class="col-md-6">Email:</label>
 						<div class="col-md-6">
 							<input type="text" class="form-control required" id="ub_email" name="ub_email" placeholder="" value="">
+						</div>
+					</div>
+					<div class="form-group form-row">
+						<label for="password" class="col-md-6">Password:</label>
+						<div class="col-md-6">
+							<input type="password" class="form-control required" id="password" name="password" placeholder="" value="">
+						</div>
+					</div>
+					<div class="form-group form-row">
+						<label for="re_password" class="col-md-6">Re. Enter Password:</label>
+						<div class="col-md-6">
+							<input type="password" class="form-control required" id="re_password" name="re_password" placeholder="" value="">
 						</div>
 					</div>
 					<div class="form-group form-row">
