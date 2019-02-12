@@ -111,7 +111,9 @@ function ub_order_register_enter_title( $input ) {
  * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
  */
 function ub_order_meta_boxes( $post ){
-	add_meta_box( 'order_meta_box', esc_html__( 'Order Info', 'ub-utility-manager' ), 'ub_order_info_build_meta_box', 'ub_order', 'normal', 'default' );
+	add_meta_box( 'order_info_meta_box', esc_html__( 'Order Info', 'ub-utility-manager' ), 'ub_order_info_build_meta_box', 'ub_order', 'normal', 'default' );
+	add_meta_box( 'order_data_meta_box', esc_html__( 'Order Data', 'ub-utility-manager' ), 'ub_order_data_build_meta_box', 'ub_order', 'normal', 'default' );
+	add_meta_box( 'order_confirm_meta_box', esc_html__( 'Order Confirm', 'ub-utility-manager' ), 'ub_order_confirm_build_meta_box', 'ub_order', 'normal', 'default' );
 }
 add_action( 'add_meta_boxes_ub_order', 'ub_order_meta_boxes' );
 
@@ -121,8 +123,6 @@ add_action( 'add_meta_boxes_ub_order', 'ub_order_meta_boxes' );
  * @param post $post The post object
  */
 function ub_order_info_build_meta_box( $post ){
-	// make sure the form request comes from WordPress
-	wp_nonce_field( basename( __FILE__ ), 'ub_order_meta_box_nonce' );
 	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
 		// retrieve the _srm_yn_question current value
 		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
@@ -147,40 +147,100 @@ function ub_order_info_build_meta_box( $post ){
 			<td><?php echo $ub_order_address; ?></td>
 		</tr>
 	</table>
+</div>
+	<?php
+}
+
+
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_data_build_meta_box( $post ){
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_details = get_post_meta($post->ID, '_ub_order_details', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_details = '';
+		$ub_order_address = '';
+	}
+	?>
+<div class='inside'>
 	<table class="form-table">
 		<tr>
 			<th colspan="2">Order Details</th>
-			<th colspan="2">Order Confirm Details</th>
 		</tr>
 		<tr>
 			<td>Gas Charge</td>
-			<td><?php echo $ub_order_details['gas_charge']; ?></td>
-			<td>Gas Deposit</td>
-			<td><?php echo $ub_order_confirm_details['gas_deposit']; ?></td>
+			<td><?php if(isset($ub_order_details['gas_charge'])){ echo $ub_order_details['gas_charge']; } ?></td>
 		</tr>
 		<tr>
 			<td>Water Charge</td>
-			<td><?php echo $ub_order_details['water_charge']; ?></td>
-			<td>Water Deposit</td>
-			<td><?php echo $ub_order_confirm_details['water_deposit']; ?></td>
+			<td><?php if(isset($ub_order_details['water_charge'])){ echo $ub_order_details['water_charge']; } ?></td>
 		</tr>
 		<tr>
 			<td>Electricity Charge</td>
-			<td><?php echo $ub_order_details['electricity_charge']; ?></td>
-			<td>Electricity Deposit</td>
-			<td><?php echo $ub_order_confirm_details['electricity_deposit']; ?></td>
+			<td><?php if(isset($ub_order_details['electricity_charge'])){ echo $ub_order_details['electricity_charge']; } ?></td>
 		</tr>
 		<tr>
 			<td>Order Total</td>
-			<td><?php echo $ub_order_details['order_total']; ?></td>
-			<td>Total Deposit</td>
-			<td><?php echo $ub_order_confirm_details['total_deposit']; ?></td>
+			<td><?php if(isset($ub_order_details['order_total'])){ echo $ub_order_details['order_total']; } ?></td>
 		</tr>
 		<tr>
 			<td>Apply Date</td>
-			<td><?php echo $ub_order_details['apply_date']; ?></td>
+			<td><?php if(isset($ub_order_details['apply_date'])){ echo $ub_order_details['apply_date']; } ?></td>
+		</tr>
+	</table>
+</div>
+	<?php
+}
+
+
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_confirm_build_meta_box( $post ){
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+		$ub_order_confirm_details = get_post_meta($post->ID, '_ub_order_confirm_details', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_address = '';
+		$ub_order_confirm_details = '';
+	}
+	?>
+<div class='inside'>
+	<table class="form-table">
+		<tr>
+			<th colspan="2">Order Confirm Details</th>
+		</tr>
+		<tr>
+			<td>Gas Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['gas_deposit'])){ echo $ub_order_confirm_details['gas_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Water Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['water_deposit'])){ echo $ub_order_confirm_details['water_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Electricity Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['electricity_deposit'])){ echo $ub_order_confirm_details['electricity_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Total Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['total_deposit'])){ echo $ub_order_confirm_details['total_deposit']; } ?></td>
+		</tr>
+		<tr>
 			<td>Confirmation Date</td>
-			<td><?php echo $ub_order_confirm_details['confirmation_date']; ?></td>
+			<td><?php if(isset($ub_order_confirm_details['confirmation_date'])){ echo $ub_order_confirm_details['confirmation_date']; } ?></td>
 		</tr>
 	</table>
 </div>
