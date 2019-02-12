@@ -140,6 +140,117 @@ function ub_get_current_user_role() {
 			}
 	}
 
+	//Retrun available_connected, available_not_connected, not_available, error
+	function ub_property_status($property_id, $utility = 'gas'){
+
+		if((get_post_meta( $property_id, '_ubp_gas_status', true) == 'connected') && ($utility == 'gas')){
+				return 'available_connected';
+		}
+		if((get_post_meta( $property_id, '_ubp_electricity_status', true) == 'connected') && ($utility == 'electricity')){
+				return 'available_connected';
+		}
+		if((get_post_meta( $property_id, '_ubp_water_status', true) == 'connected') && ($utility == 'water')){
+				return 'available_connected';
+		}
+
+
+
+		if((get_post_meta( $property_id, '_ubp_gas_status', true) == 'disconnected') && ($utility == 'gas')){
+				return 'available_not_connected';
+		}
+		if((get_post_meta( $property_id, '_ubp_electricity_status', true) == 'disconnected') && ($utility == 'electricity')){
+				return 'available_not_connected';
+		}
+		if((get_post_meta( $property_id, '_ubp_water_status', true) == 'disconnected') && ($utility == 'water')){
+				return 'available_not_connected';
+		}
+
+
+		if(ub_property_error_status($property_id, $utility)){
+			if($utility == 'gas'){
+				$upb_meta_key = '_ubp_gas';
+			}
+			if($utility == 'water'){
+				$upb_meta_key = '_ubp_water';
+			}
+			if($utility == 'electricity'){
+				$upb_meta_key = '_ubp_electricity';
+			}
+			if(get_post_meta($property_id, $upb_meta_key, true) == 'on'){
+				return 'available_not_connected';
+			}else{
+				return 'not_available';
+			}
+		}else{
+			return 'error';
+		}
+
+
+
+	}
+
+	function ub_property_error_status($property_id, $utility = 'gas'){
+
+			if(get_post_meta($property_id, '_ubp_street_address', true) == ''){
+				return false;
+			}
+			if(get_post_meta($property_id, '_ubp_city', true) == ''){
+				return false;
+			}
+			if(get_post_meta($property_id, '_ubp_zipcode', true) == ''){
+				return false;
+			}
+			if(get_post_meta($property_id, '_ubp_state', true) == ''){
+				return false;
+			}
+			if(get_the_title($property_id) == ''){
+				return false;
+			}
+			if(get_post_meta($property_id, '_ubp_owner_phone_number', true) == ''){
+				return false;
+			}
+
+			if($utility == 'gas'){
+					if((get_post_meta( $property_id, '_ubp_gas_provider', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_gas_utility_name', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_gas_account_number', true) == '')){
+							return false;
+					}
+				}
+				if($utility == 'water'){
+					if((get_post_meta( $property_id, '_ubp_water_provider', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_water_utility_name', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_water_account_number', true) == '')){
+							return false;
+					}
+				}
+				if($utility == 'electricity'){
+					if((get_post_meta( $property_id, '_ubp_electricity_provider', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_electricity_utility_name', true) == '')){
+							return false;
+					}
+					if((get_post_meta( $property_id, '_ubp_electricity_account_number', true) == '')){
+							return false;
+					}
+				}
+
+				return true;
+
+	}
+
+
+
+
 	function ub_send_email($send_to, $subject, $message){
 		add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 		//add_filter( 'wp_mail_from_name', function( $name ) { return get_option('quote_email_from_name'); });

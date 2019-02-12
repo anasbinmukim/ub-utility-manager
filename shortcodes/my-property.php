@@ -129,30 +129,64 @@ function ub_my_property_shortcode($atts){
 	while($property_posts->have_posts()): $property_posts->the_post();
 		$property_id = get_the_ID();
 		//$property_title = get_the_title();
+
+		$gas_status = ub_property_status($property_id, 'gas');
+		$electricity_status = ub_property_status($property_id, 'electricity');
+		$water_status = ub_property_status($property_id, 'water');
 		?>
 		<tr>
 			<td><?php echo get_post_meta($property_id, '_ubp_street_address', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_city', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_zipcode', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_state', true); ?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_gas', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_water', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_electricity', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
+			<td>
+				<?php
+					if($gas_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($gas_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($gas_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($gas_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
+			<td>
+				<?php
+					if($water_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($water_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($water_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($water_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
+			<td>
+				<?php
+					if($electricity_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($electricity_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($electricity_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($electricity_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
 		</tr>
 	<?php
 	endwhile;
