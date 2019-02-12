@@ -102,3 +102,87 @@ function ub_order_register_enter_title( $input ) {
 
     return $input;
 }
+
+
+/**
+ * Add meta box
+ *
+ * @param post $post The post object
+ * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
+ */
+function ub_order_meta_boxes( $post ){
+	add_meta_box( 'order_meta_box', esc_html__( 'Order Info', 'ub-utility-manager' ), 'ub_order_info_build_meta_box', 'ub_order', 'normal', 'default' );
+}
+add_action( 'add_meta_boxes_ub_order', 'ub_order_meta_boxes' );
+
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_info_build_meta_box( $post ){
+	// make sure the form request comes from WordPress
+	wp_nonce_field( basename( __FILE__ ), 'ub_order_meta_box_nonce' );
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_details = get_post_meta($post->ID, '_ub_order_details', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+		$ub_order_confirm_details = get_post_meta($post->ID, '_ub_order_confirm_details', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_details = '';
+		$ub_order_address = '';
+		$ub_order_confirm_details = '';
+	}
+	?>
+<div class='inside'>
+	<table class="form-table">
+		<tr>
+			<th><?php echo esc_html__( 'Order Property', 'ub-utility-manager' ); ?></th>
+			<td><?php echo get_the_title($ub_order_details['property_id']); ?></td>
+		</tr>
+		<tr>
+			<th><?php echo esc_html__( 'Order Address', 'ub-utility-manager' ); ?></th>
+			<td><?php echo $ub_order_address; ?></td>
+		</tr>
+	</table>
+	<table class="form-table">
+		<tr>
+			<th colspan="2">Order Details</th>
+			<th colspan="2">Order Confirm Details</th>
+		</tr>
+		<tr>
+			<td>Gas Charge</td>
+			<td><?php echo $ub_order_details['gas_charge']; ?></td>
+			<td>Gas Deposit</td>
+			<td><?php echo $ub_order_confirm_details['gas_deposit']; ?></td>
+		</tr>
+		<tr>
+			<td>Water Charge</td>
+			<td><?php echo $ub_order_details['water_charge']; ?></td>
+			<td>Water Deposit</td>
+			<td><?php echo $ub_order_confirm_details['water_deposit']; ?></td>
+		</tr>
+		<tr>
+			<td>Electricity Charge</td>
+			<td><?php echo $ub_order_details['electricity_charge']; ?></td>
+			<td>Electricity Deposit</td>
+			<td><?php echo $ub_order_confirm_details['electricity_deposit']; ?></td>
+		</tr>
+		<tr>
+			<td>Order Total</td>
+			<td><?php echo $ub_order_details['order_total']; ?></td>
+			<td>Total Deposit</td>
+			<td><?php echo $ub_order_confirm_details['total_deposit']; ?></td>
+		</tr>
+		<tr>
+			<td>Apply Date</td>
+			<td><?php echo $ub_order_details['apply_date']; ?></td>
+			<td>Confirmation Date</td>
+			<td><?php echo $ub_order_confirm_details['confirmation_date']; ?></td>
+		</tr>
+	</table>
+</div>
+	<?php
+}
