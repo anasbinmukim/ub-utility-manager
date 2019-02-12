@@ -11,7 +11,8 @@ function ub_register_property_shortcode(){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to access this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
 	}
 
 	$property_author_id = get_current_user_id();

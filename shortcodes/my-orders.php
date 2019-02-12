@@ -10,7 +10,8 @@ function ub_my_orders_shortcode($atts){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
 	}
 
 	$order_author_id = get_current_user_id();

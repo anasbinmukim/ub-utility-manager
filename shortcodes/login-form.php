@@ -9,7 +9,8 @@ function ub_login_form_shortcode($atts){
 	if(is_user_logged_in()){
 		$display_message = 'You are already logged in.';
 		echo ub_action_message($display_message, 'info');
-		return;
+		$output_result = ob_get_clean();
+		return $output_result;
 	}
 
 	if($redirect != ''){

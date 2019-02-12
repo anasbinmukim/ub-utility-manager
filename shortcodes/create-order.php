@@ -14,13 +14,14 @@ function ub_connect_disconnect_order_shortcode($atts){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
 	}
 
 	if(isset($_GET['submit_type'])){
 			$submit_type = esc_html($_GET['submit_type']);
 	}
-	
+
 	$property_author_id = get_current_user_id();
 	if(ub_get_current_user_role() == 'employee'){
 		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);

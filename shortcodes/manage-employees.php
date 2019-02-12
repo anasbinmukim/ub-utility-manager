@@ -16,7 +16,8 @@ function ub_manage_employees_shortcode($atts){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
 	}
 
 	if((ub_get_current_user_role() == 'property_manager') || (current_user_can('manage_options'))){
@@ -24,7 +25,8 @@ function ub_manage_employees_shortcode($atts){
 	}else{
 		$display_message = 'Only property manager can access this page.';
 		echo ub_action_message($display_message, 'info');
-		return;
+		$output_result = ob_get_clean();
+		return $output_result;
 	}
 
 	$property_manager_id = get_current_user_id();

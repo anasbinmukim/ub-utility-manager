@@ -9,7 +9,8 @@ function ub_review_order_shortcode($atts){
 	if(!is_user_logged_in()){
 		$display_message = 'You need to login to view this page';
 		echo ub_action_message($display_message, 'info');
-		return;
+		$output_result = ob_get_clean();
+		return $output_result;
 	}
 
 	if(isset($_GET['order_type'])){
