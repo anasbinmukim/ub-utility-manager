@@ -308,10 +308,12 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 		ob_start();
 
 		$order_id = intval($_POST['order_id']);
+		$order_status = get_post_status ( $order_id );
     $order_type = esc_html($_POST['order_type']);
 
 		$property_id = get_post_meta($order_id, '_ub_order_property_id', true);
 		$order_details = get_post_meta($order_id, '_ub_order_details', true);
+		$confirmation_details = get_post_meta($order_id, '_ub_order_confirm_details', true);
 		$order_address = get_post_meta($order_id, '_ub_order_address', true);
 
 		$apply_date = '';
@@ -432,7 +434,9 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 													<input type="hidden" name="order_id" value="<?php echo intval($order_id); ?>" />
 													<input type="hidden" name="order_type" value="<?php echo esc_attr($order_type); ?>" />
 													<input type="hidden" name="property_id" value="<?php echo intval($property_id); ?>" />
+													<?php if($order_status != 'complete'){ ?>
 													<input type="submit" class="btn btn-primary" name="order_confirm_submit" value="Confirm" />
+													<?php } ?>
 												</td>
 											</tr>
 										</table>

@@ -24,6 +24,11 @@ function ub_review_order_shortcode($atts){
 	$edit_order_url = get_permalink(get_option('ubp_create_order'));
 	$cart_items = array();
 
+	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
 	$connect_cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
 	$disconnect_cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
 
@@ -146,14 +151,14 @@ function ub_review_order_shortcode($atts){
 		 if(isset($_POST['order_submit'])){
 			 if(isset($_POST['order_submit_type']) && ($_POST['order_submit_type'] == 'connect')){
 				 	//ub_debug($cart_items);
-					if(create_new_order($cart_items, 'connect', $current_user_id)){
+					if(create_new_order($cart_items, 'connect', $property_author_id)){
 						update_user_meta($current_user_id, '_ub_connect_cart_items', '');
 					}
 			 }
 
 			 if(isset($_POST['order_submit_type']) && ($_POST['order_submit_type'] == 'disconnect')){
 					//ub_debug($cart_items);
-					if(create_new_order($cart_items, 'disconnect', $current_user_id)){
+					if(create_new_order($cart_items, 'disconnect', $property_author_id)){
 						update_user_meta($current_user_id, '_ub_disconnect_cart_items', '');
 					}
 			 }
