@@ -15,12 +15,11 @@ function utility_manager_property_settings_page(){
 	if ( isset($_POST['ubp_setting_nonce']) && (! isset( $_POST['ubp_setting_nonce'] ) || ! wp_verify_nonce( $_POST['ubp_setting_nonce'], 'ubp_setting_action' ) ) ) {
 		//This is nonce error
 	}elseif(isset($_POST['ubp_setting_submit'])){
-
-		update_option( 'ubp_register_property', intval($_POST['ubp_register_property']));
-		update_option( 'ubp_view_property', intval($_POST['ubp_view_property']));
-		update_option( 'ubp_create_account', intval($_POST['ubp_create_account']));
-		update_option( 'ubp_create_order', intval($_POST['ubp_create_order']));
-		update_option( 'ubp_review_order', intval($_POST['ubp_review_order']));
+		update_option( 'ubpid_register_property', intval($_POST['ubpid_register_property']));
+		update_option( 'ubpid_view_property', intval($_POST['ubpid_view_property']));
+		update_option( 'ubpid_create_account', intval($_POST['ubpid_create_account']));
+		update_option( 'ubpid_add_employee', intval($_POST['ubpid_add_employee']));
+		update_option( 'ubpid_manage_employee', intval($_POST['ubpid_manage_employee']));
     ?>
 
     <div class="updated"><p><?php echo esc_html__('Successfully Updated', 'ub-utility-manager'); ?></p></div>
@@ -37,14 +36,14 @@ function utility_manager_property_settings_page(){
 		  <tr valign="top">
 				<th scope="row"><?php echo esc_html__('Register Property', 'ub-utility-manager'); ?></th>
 				<td>
-					<select name="ubp_register_property" id="ubp_register_property">
+					<select name="ubpid_register_property" id="ubpid_register_property">
 						<?php
-							$ubp_register_property = intval(get_option('ubp_register_property'));
+							$ubpid_register_property = intval(get_option('ubpid_register_property'));
 						?>
 						<option value="">
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
-							<option <?php selected($ubp_register_property, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+							<option <?php selected($ubpid_register_property, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>
@@ -53,14 +52,14 @@ function utility_manager_property_settings_page(){
 			<tr valign="top">
 				<th scope="row"><?php echo esc_html__('View Property', 'ub-utility-manager'); ?></th>
 				<td>
-					<select name="ubp_view_property" id="ubp_view_property">
+					<select name="ubpid_view_property" id="ubpid_view_property">
 						<?php
-							$ubp_view_property = intval(get_option('ubp_view_property'));
+							$ubpid_view_property = intval(get_option('ubpid_view_property'));
 						?>
 						<option value="">
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
-							<option <?php selected($ubp_view_property, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+							<option <?php selected($ubpid_view_property, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>
@@ -69,44 +68,44 @@ function utility_manager_property_settings_page(){
 			<tr valign="top">
 				<th scope="row"><?php echo esc_html__('Create Account', 'ub-utility-manager'); ?></th>
 				<td>
-					<select name="ubp_create_account" id="ubp_create_account">
+					<select name="ubpid_create_account" id="ubpid_create_account">
 						<?php
-							$ubp_create_account = intval(get_option('ubp_create_account'));
+							$ubpid_create_account = intval(get_option('ubpid_create_account'));
 						?>
 						<option value="">
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
-							<option <?php selected($ubp_create_account, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+							<option <?php selected($ubpid_create_account, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php echo esc_html__('Create Order', 'ub-utility-manager'); ?></th>
+				<th scope="row"><?php echo esc_html__('Add Employee', 'ub-utility-manager'); ?></th>
 				<td>
-					<select name="ubp_create_order" id="ubp_create_order">
+					<select name="ubpid_add_employee" id="ubpid_add_employee">
 						<?php
-							$ubp_create_order = intval(get_option('ubp_create_order'));
+							$ubpid_add_employee = intval(get_option('ubpid_add_employee'));
 						?>
 						<option value="">
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
-							<option <?php selected($ubp_create_order, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+							<option <?php selected($ubpid_add_employee, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php echo esc_html__('Review Order', 'ub-utility-manager'); ?></th>
+				<th scope="row"><?php echo esc_html__('Manage Employee', 'ub-utility-manager'); ?></th>
 				<td>
-					<select name="ubp_review_order" id="ubp_review_order">
+					<select name="ubpid_manage_employee" id="ubpid_manage_employee">
 						<?php
-							$ubp_review_order = intval(get_option('ubp_review_order'));
+							$ubpid_manage_employee = intval(get_option('ubpid_manage_employee'));
 						?>
 						<option value="">
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
-							<option <?php selected($ubp_review_order, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+							<option <?php selected($ubpid_manage_employee, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>

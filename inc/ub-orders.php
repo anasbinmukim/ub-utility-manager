@@ -37,6 +37,61 @@ function ub_utility_manager_orders_custom_post(){
 			)
 	);
 
+	register_post_status( 'new', array(
+		'label'                     => _x( 'New', 'post status label', 'ub-utility-manager' ),
+		'public'                    => true,
+		'label_count'               => _n_noop( 'New <span class="count">(%s)</span>', 'New <span class="count">(%s)</span>', 'ub-utility-manager' ),
+		'post_type'                 => array( 'ub_order' ), // Define one or more post types the status can be applied to.
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'show_in_metabox_dropdown'  => true,
+		'show_in_inline_dropdown'   => true,
+		'dashicon'                  => 'dashicons-yes',
+	) );
+
+	register_post_status( 'complete', array(
+		'label'                     => _x( 'Complete', 'post status label', 'ub-utility-manager' ),
+		'public'                    => true,
+		'label_count'               => _n_noop( 'Complete <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>', 'ub-utility-manager' ),
+		'post_type'                 => array( 'ub_order' ), // Define one or more post types the status can be applied to.
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'show_in_metabox_dropdown'  => true,
+		'show_in_inline_dropdown'   => true,
+		'dashicon'                  => 'dashicons-yes',
+	) );
+
+	$labels_order_type = array(
+			'name'                       => _x( 'Order Type', 'taxonomy general name' ),
+			'singular_name'              => _x( 'Order Type', 'taxonomy singular name' ),
+			'search_items'               => __( 'Search Order Type' ),
+			'popular_items'              => __( 'Popular Order Type' ),
+			'all_items'                  => __( 'All Order Types' ),
+			'parent_item'                => __( 'Parent Order Type' ),
+			'parent_item_colon'          => __( 'Parent Order Type:' ),
+			'edit_item'                  => __( 'Edit Order Type' ),
+			'update_item'                => __( 'Update Order Type' ),
+			'add_new_item'               => __( 'Add New Order Type' ),
+			'new_item_name'              => __( 'New Order Type Name' ),
+			'separate_items_with_commas' => __( 'Separate Order Types with commas' ),
+			'add_or_remove_items'        => __( 'Add or remove Order Type' ),
+			'choose_from_most_used'      => __( 'Choose from the most used Order Types' ),
+			'not_found'                  => __( 'No Order Types found.' ),
+			'menu_name'                  => __( 'Type' ),
+	);
+
+	$args_order_type = array(
+			'hierarchical'          => true,
+			'labels'                => $labels_order_type,
+			'show_ui'               => true,
+			'show_admin_column'     => true,
+			'update_count_callback' => '_update_post_term_count',
+			'query_var'             => true,
+			'rewrite'               => array( 'slug' => 'order-type' ),
+	);
+	register_taxonomy( 'ub_order_type', 'ub_order', $args_order_type );
+
+
 }
 
 add_filter( 'enter_title_here', 'ub_order_register_enter_title' );
@@ -49,38 +104,145 @@ function ub_order_register_enter_title( $input ) {
 }
 
 
-add_action( 'cmb2_admin_init', 'ub_order_register_custom_metabox' );
-function ub_order_register_custom_metabox() {
-	$prefix = '_ubo_';
+/**
+ * Add meta box
+ *
+ * @param post $post The post object
+ * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
+ */
+function ub_order_meta_boxes( $post ){
+	add_meta_box( 'order_info_meta_box', esc_html__( 'Order Info', 'ub-utility-manager' ), 'ub_order_info_build_meta_box', 'ub_order', 'normal', 'default' );
+	add_meta_box( 'order_data_meta_box', esc_html__( 'Order Data', 'ub-utility-manager' ), 'ub_order_data_build_meta_box', 'ub_order', 'normal', 'default' );
+	add_meta_box( 'order_confirm_meta_box', esc_html__( 'Order Confirm', 'ub-utility-manager' ), 'ub_order_confirm_build_meta_box', 'ub_order', 'normal', 'default' );
+}
+add_action( 'add_meta_boxes_ub_order', 'ub_order_meta_boxes' );
 
-	$cmb_order_details = new_cmb2_box( array(
-		'id'            => $prefix . 'order_details',
-		'title'         => esc_html__( 'Order Details', 'ub-utility-manager' ),
-		'object_types'  => array( 'ub_order' ), // Post type
-	) );
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_info_build_meta_box( $post ){
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_details = get_post_meta($post->ID, '_ub_order_details', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+		$ub_order_confirm_details = get_post_meta($post->ID, '_ub_order_confirm_details', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_details = '';
+		$ub_order_address = '';
+		$ub_order_confirm_details = '';
+	}
+	?>
+<div class='inside'>
+	<table class="form-table">
+		<tr>
+			<th><?php echo esc_html__( 'Order Property', 'ub-utility-manager' ); ?></th>
+			<td><?php echo get_the_title($ub_order_details['property_id']); ?></td>
+		</tr>
+		<tr>
+			<th><?php echo esc_html__( 'Order Address', 'ub-utility-manager' ); ?></th>
+			<td><?php echo $ub_order_address; ?></td>
+		</tr>
+	</table>
+</div>
+	<?php
+}
 
-	$cmb_order_details->add_field( array(
-		'name'       => esc_html__( 'Created:', 'ub-utility-manager' ),
-		'id'         => $prefix . 'created',
-		'type'       => 'text',
-	) );
-	$cmb_order_details->add_field( array(
-		'name'       => esc_html__( 'Status:', 'ub-utility-manager' ),
-		'id'         => $prefix . 'status',
-		'type'       => 'text',
-	) );
-	$cmb_order_details->add_field( array(
-		'name'       => esc_html__( 'Order Created By:', 'ub-utility-manager' ),
-		'id'         => $prefix . 'order_by',
-		'type'       => 'text',
-	) );
 
-	$cmb_order_items = new_cmb2_box( array(
-		'id'            => $prefix . 'order_items',
-		'title'         => esc_html__( 'Order Items', 'ub-utility-manager' ),
-		'object_types'  => array( 'ub_order' ), // Post type
-	) );
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_data_build_meta_box( $post ){
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_details = get_post_meta($post->ID, '_ub_order_details', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_details = '';
+		$ub_order_address = '';
+	}
+	?>
+<div class='inside'>
+	<table class="form-table">
+		<tr>
+			<th colspan="2">Order Details</th>
+		</tr>
+		<tr>
+			<td>Gas Charge</td>
+			<td><?php if(isset($ub_order_details['gas_charge'])){ echo $ub_order_details['gas_charge']; } ?></td>
+		</tr>
+		<tr>
+			<td>Water Charge</td>
+			<td><?php if(isset($ub_order_details['water_charge'])){ echo $ub_order_details['water_charge']; } ?></td>
+		</tr>
+		<tr>
+			<td>Electricity Charge</td>
+			<td><?php if(isset($ub_order_details['electricity_charge'])){ echo $ub_order_details['electricity_charge']; } ?></td>
+		</tr>
+		<tr>
+			<td>Order Total</td>
+			<td><?php if(isset($ub_order_details['order_total'])){ echo $ub_order_details['order_total']; } ?></td>
+		</tr>
+		<tr>
+			<td>Apply Date</td>
+			<td><?php if(isset($ub_order_details['apply_date'])){ echo $ub_order_details['apply_date']; } ?></td>
+		</tr>
+	</table>
+</div>
+	<?php
+}
 
 
-
+/**
+ * Build custom field meta box
+ *
+ * @param post $post The post object
+ */
+function ub_order_confirm_build_meta_box( $post ){
+	if(isset($_GET['post']) && ($_GET['action'] == 'edit')){
+		// retrieve the _srm_yn_question current value
+		$ub_order_property_id = get_post_meta($post->ID, '_ub_order_property_id', true);
+		$ub_order_address = get_post_meta($post->ID, '_ub_order_address', true);
+		$ub_order_confirm_details = get_post_meta($post->ID, '_ub_order_confirm_details', true);
+	}else{
+		$ub_order_property_id = '';
+		$ub_order_address = '';
+		$ub_order_confirm_details = '';
+	}
+	?>
+<div class='inside'>
+	<table class="form-table">
+		<tr>
+			<th colspan="2">Order Confirm Details</th>
+		</tr>
+		<tr>
+			<td>Gas Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['gas_deposit'])){ echo $ub_order_confirm_details['gas_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Water Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['water_deposit'])){ echo $ub_order_confirm_details['water_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Electricity Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['electricity_deposit'])){ echo $ub_order_confirm_details['electricity_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Total Deposit</td>
+			<td><?php if(isset($ub_order_confirm_details['total_deposit'])){ echo $ub_order_confirm_details['total_deposit']; } ?></td>
+		</tr>
+		<tr>
+			<td>Confirmation Date</td>
+			<td><?php if(isset($ub_order_confirm_details['confirmation_date'])){ echo $ub_order_confirm_details['confirmation_date']; } ?></td>
+		</tr>
+	</table>
+</div>
+	<?php
 }

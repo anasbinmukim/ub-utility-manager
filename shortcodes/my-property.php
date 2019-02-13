@@ -7,9 +7,29 @@ function ub_my_property_shortcode($atts){
   ), $atts));
   ob_start();
 
+	if(!is_user_logged_in()){
+		$display_message = 'You need to login to view this page';
+		echo ub_action_message($display_message, 'info');
+		$output_result = ob_get_clean();
+		return $output_result;
+	}
+
+	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
+?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>My Properties</h2>
+		</div>
 <form action="" method="post">
 	<div class="form-row">
 		<div class="form-group col-md-4">
@@ -45,9 +65,6 @@ function ub_my_property_shortcode($atts){
 
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="7">My Properties</td>
-		</tr>
-		<tr>
 			<td>Street Address</td>
 			<td>City</td>
 			<td>Zipcode</td>
@@ -58,14 +75,14 @@ function ub_my_property_shortcode($atts){
 		</tr>
 
 	  <?php
-
-	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && !empty($_POST['street_address'])) || (isset($_POST['city']) && !empty($_POST['city'])) || (isset($_POST['zipcode']) && !empty($_POST['zipcode'])) || (isset($_POST['state']) && !empty($_POST['state'])))){
+	if(isset($_POST['search_property']) && ((isset($_POST['street_address']) && $_POST['street_address'] != '') || (isset($_POST['city']) && $_POST['city'] != '') || (isset($_POST['zipcode']) && $_POST['zipcode'] != '') || (isset($_POST['state']) && $_POST['state'] != ''))){
 		$city = $_POST['city'];
 		$street_address = $_POST['street_address'];
 		$zipcode = $_POST['zipcode'];
 		$state = $_POST['state'];
 		$args = array(
 			'post_type' => 'ub_property',
+			'author' => $property_author_id,
 			'posts_per_page' => $count,
 			'orderby' => 'menu_order',
 			'order' => 'ASC',
@@ -100,6 +117,7 @@ function ub_my_property_shortcode($atts){
 	}else{
 		$args = array(
 			'post_type' => 'ub_property',
+			'author' => $property_author_id,
 			'posts_per_page' => $count,
 			'orderby' => 'menu_order',
 			'order' => 'ASC'
@@ -111,30 +129,64 @@ function ub_my_property_shortcode($atts){
 	while($property_posts->have_posts()): $property_posts->the_post();
 		$property_id = get_the_ID();
 		//$property_title = get_the_title();
+
+		$gas_status = ub_property_status($property_id, 'gas');
+		$electricity_status = ub_property_status($property_id, 'electricity');
+		$water_status = ub_property_status($property_id, 'water');
 		?>
 		<tr>
 			<td><?php echo get_post_meta($property_id, '_ubp_street_address', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_city', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_zipcode', true); ?></td>
 			<td><?php echo get_post_meta($property_id, '_ubp_state', true); ?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_gas', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_water', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
-			<td><?php if(get_post_meta($property_id, '_ubp_electricity', true) == 'on'){
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-			}else{
-				echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-			}
-			?></td>
+			<td>
+				<?php
+					if($gas_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($gas_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($gas_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($gas_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
+			<td>
+				<?php
+					if($water_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($water_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($water_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($water_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
+			<td>
+				<?php
+					if($electricity_status == 'available_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+					}
+					if($electricity_status == 'available_not_connected'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+					}
+					if($electricity_status == 'not_available'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+					}
+					if($electricity_status == 'error'){
+							echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+					}
+				?>
+			</td>
 		</tr>
 	<?php
 	endwhile;

@@ -163,7 +163,7 @@ function ub_property_register_custom_metabox() {
 	) );
 
 	$cmb_utility_gas->add_field( array(
-		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'name' => esc_html__( 'Upload PDF', 'ub-utility-manager' ),
 		'id'   => $prefix . 'gas_pdf',
 		'type' => 'file',
 	) );
@@ -201,7 +201,7 @@ function ub_property_register_custom_metabox() {
 	) );
 
 	$cmb_utility_water->add_field( array(
-		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'name' => esc_html__( 'Upload PDF', 'ub-utility-manager' ),
 		'id'   => $prefix . 'water_pdf',
 		'type' => 'file',
 	) );
@@ -239,9 +239,49 @@ function ub_property_register_custom_metabox() {
 	) );
 
 	$cmb_utility_electricity->add_field( array(
-		'name' => esc_html__( 'Upload PDF', 'cmb2' ),
+		'name' => esc_html__( 'Upload PDF', 'ub-utility-manager' ),
 		'id'   => $prefix . 'electricity_pdf',
 		'type' => 'file',
+	) );
+
+	//For Utility Electricity
+	$cmb_utility_status = new_cmb2_box( array(
+		'id'            => $prefix . 'utility_status',
+		'title'         => esc_html__( 'Utility Status', 'ub-utility-manager' ),
+		'object_types'  => array( 'ub_property' ), // Post type
+	) );
+
+	$cmb_utility_status->add_field( array(
+		'name' => esc_html__( 'Gas', 'ub-utility-manager' ),
+		'id'   => '_ubp_gas_status',
+		'type' => 'radio_inline',
+		'options' => array(
+			'' => esc_html__( 'None', 'ub-utility-manager' ),
+			'connected' => esc_html__( 'Connected', 'ub-utility-manager' ),
+			'disconnected' => esc_html__( 'Disconnected', 'ub-utility-manager' ),
+		),
+	) );
+
+	$cmb_utility_status->add_field( array(
+		'name' => esc_html__( 'Water', 'ub-utility-manager' ),
+		'id'   => '_ubp_water_status',
+		'type' => 'radio_inline',
+		'options' => array(
+			'' => esc_html__( 'None', 'ub-utility-manager' ),
+			'connected' => esc_html__( 'Connected', 'ub-utility-manager' ),
+			'disconnected' => esc_html__( 'Disconnected', 'ub-utility-manager' ),
+		),
+	) );
+
+	$cmb_utility_status->add_field( array(
+		'name' => esc_html__( 'Electricity', 'ub-utility-manager' ),
+		'id'   => '_ubp_electricity_status',
+		'type' => 'radio_inline',
+		'options' => array(
+			'' => esc_html__( 'None', 'ub-utility-manager' ),
+			'connected' => esc_html__( 'Connected', 'ub-utility-manager' ),
+			'disconnected' => esc_html__( 'Disconnected', 'ub-utility-manager' ),
+		),
 	) );
 
 

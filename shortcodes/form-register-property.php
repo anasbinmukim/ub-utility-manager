@@ -11,11 +11,18 @@ function ub_register_property_shortcode(){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to access this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
 	}
 
-	$current_user_id = get_current_user_id();
-	$current_user_info = get_userdata($current_user_id);
+	$property_author_id = get_current_user_id();
+	$current_user_info = get_userdata($property_author_id);
+
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+		$current_user_info = get_userdata($property_author_id);
+	}
+
 	$current_page_url = get_permalink();
 	$form_submitted = true;
 
@@ -139,7 +146,7 @@ function ub_register_property_shortcode(){
 				$property_data = array(
 					'post_type'      => 'ub_property',
 					'post_title'     => sanitize_text_field( $owner_name  ),
-					'post_author'   => $current_user_id,
+					'post_author'   => $property_author_id,
 					'post_status'    => 'publish'
 				);
 		 		$property_id = wp_insert_post( $property_data );
@@ -180,7 +187,7 @@ function ub_register_property_shortcode(){
 					$display_message = 'Added successful';
 					echo ub_action_message($display_message, 'success');
 					$params_url = array('added-success' => 'yes');
-					$my_property_page_url = get_permalink(4707);
+					$my_property_page_url = get_permalink(get_option('ubpid_view_property'));
 					$redirect_page_url = add_query_arg( $params_url, $my_property_page_url);
 					echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
 			}
@@ -222,12 +229,20 @@ function ub_register_property_shortcode(){
 
 	}
 	?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
+?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>Register new property</h2>
+		</div>
 	<form action="<?php echo esc_url($current_page_url); ?>" method="POST" id="registration-form">
 	<div class="row">
 		<div class="col-md-3">
-			<h4>New Property</h4>
+			<h4>Property Info</h4>
 			<div class="form-group">
 				<label for="owner_name">Owner's Name</label>
 				<input type="text" class="form-control required" id="owner_name" name="owner_name" placeholder="" value="<?php echo esc_html($owner_name); ?>">
@@ -403,7 +418,7 @@ function ub_register_property_shortcode(){
 
 				$current_owner_name = $current_user_info->last_name .  " " . $current_user_info->first_name;
 
-				$current_owner_phone = get_the_author_meta( '_ub_phone', $current_user_id );
+				$current_owner_phone = get_the_author_meta( '_ub_phone', $property_author_id );
 				?>
 				<input type="hidden" data-owner_name="<?php echo esc_attr($current_owner_name); ?>" data-phone="<?php echo esc_attr($current_owner_phone); ?>" name="update_property_id" id="update_property_id" value="<?php echo intval($update_property_id); ?>" />
 				<input type="hidden" name="property_submission_type" value="<?php echo esc_attr($property_submission_type); ?>" />

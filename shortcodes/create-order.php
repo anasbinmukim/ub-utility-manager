@@ -14,10 +14,20 @@ function ub_connect_disconnect_order_shortcode($atts){
 	if(!is_user_logged_in()){
 			$display_message = 'Please login to view this page.';
 			echo ub_action_message($display_message, 'info');
-			return;
+			$output_result = ob_get_clean();
+			return $output_result;
+	}
+
+	if(isset($_GET['submit_type'])){
+			$submit_type = esc_html($_GET['submit_type']);
 	}
 
 	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
+
 	$current_user_id = get_current_user_id();
 	$current_page_url = get_permalink();
 
@@ -35,9 +45,9 @@ function ub_connect_disconnect_order_shortcode($atts){
 		$apply_date = $_POST['apply_date'];
 
 		$total_cart_items = array();
-		foreach ($add_to_cart_products as $pkey => $product_id) {
+		foreach ($add_to_cart_products as $pkey => $property_id) {
 			if((isset($check_utility_gas[$pkey]) && ($check_utility_gas[$pkey] == 'yes')) || (isset($check_utility_water[$pkey]) && ($check_utility_water[$pkey] == 'yes')) || (isset($check_utility_electricity[$pkey]) && ($check_utility_electricity[$pkey] == 'yes'))){
-				$total_cart_items[$product_id] = array(
+				$total_cart_items[$property_id] = array(
 					'gas' => esc_html($check_utility_gas[$pkey]),
 					'water' => esc_html($check_utility_water[$pkey]),
 					'electricity' => esc_html($check_utility_electricity[$pkey]),
@@ -47,7 +57,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 		}
 
 		//ub_debug($total_cart_items);
-		$review_order_url = get_permalink(get_option('ubp_review_order'));
+		$review_order_url = get_permalink(get_option('ubpid_review_order'));
 
 		if($connection_type == 'connect'){
 				update_user_meta($current_user_id, '_ub_connect_cart_items', $total_cart_items);
@@ -79,6 +89,11 @@ function ub_connect_disconnect_order_shortcode($atts){
 		 $action_url = esc_url( add_query_arg( $params_url, $current_page_url) );
 	}
 
+?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
 ?>
 <div class="ub-form-wrap ub-new-connction-order">
 	<div class="ub-form-content">
@@ -205,6 +220,10 @@ function ub_connect_disconnect_order_shortcode($atts){
 		$ubp_gas_status = get_post_meta($property_id, '_ubp_gas_status', true);
 		$ubp_water_status = get_post_meta($property_id, '_ubp_water_status', true);
 		$ubp_electricity_status = get_post_meta($property_id, '_ubp_electricity_status', true);
+
+		$gas_status = ub_property_status($property_id, 'gas');
+		$electricity_status = ub_property_status($property_id, 'electricity');
+		$water_status = ub_property_status($property_id, 'water');
 		?>
 		<tr>
 			<td>
@@ -219,45 +238,129 @@ function ub_connect_disconnect_order_shortcode($atts){
 			<td><?php echo esc_html($ubp_state); ?></td>
 
 			<?php if($submit_type == 'connect'){ ?>
-				<td><?php if(($ubp_gas == 'on') && ($ubp_gas_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}elseif(($ubp_gas == 'on') && ($ubp_gas_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}elseif(($ubp_gas == 'on') && ($ubp_gas_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
-				}
-				?></td>
-				<td><?php if(($ubp_water == 'on') && ($ubp_water_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}elseif(($ubp_water == 'on') && ($ubp_water_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}elseif(($ubp_water == 'on') && ($ubp_water_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
-				}
-				?></td>
-				<td><?php if(($ubp_electricity == 'on') && ($ubp_electricity_status == 'connected')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}elseif(($ubp_electricity == 'on') && ($ubp_electricity_status == 'error')){
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}elseif(($ubp_electricity == 'on') && ($ubp_electricity_status != 'connected')){
-					echo '<input class="check_flag" type="checkbox" /><input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}else{
-					echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
-					echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
-				}
-				?></td>
+				<td>
+					<?php
+						if($gas_status == 'available_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'available_not_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+					?>
+				</td>
+				<td>
+					<?php
+						if($water_status == 'available_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'available_not_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+					?>
+				</td>
+				<td>
+					<?php
+						if($electricity_status == 'available_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'available_not_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+					?>
+				</td>
+			<?php } ?>
+
+			<?php if($submit_type == 'disconnect'){ ?>
+				<td>
+					<?php
+						if($gas_status == 'available_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'available_not_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+						if($gas_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_gas[]" value="no">';
+						}
+					?>
+				</td>
+				<td>
+					<?php
+						if($water_status == 'available_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'available_not_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+						if($water_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_water[]" value="no">';
+						}
+					?>
+				</td>
+				<td>
+					<?php
+						if($electricity_status == 'available_connected'){
+								echo '<input class="check_flag" type="checkbox" />';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'available_not_connected'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/available-not-connected.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'not_available'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/not-available.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+						if($electricity_status == 'error'){
+								echo '<img src="'.UBUMANAGER_FOLDER_URL.'/images/error-notification.png" alt=""/>';
+								echo '<input type="hidden" class="check_value" name="check_utility_electricity[]" value="no">';
+						}
+					?>
+				</td>
 			<?php } ?>
 
 			<td class="ub-date-picker" width="21%">

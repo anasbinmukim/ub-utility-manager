@@ -9,19 +9,42 @@ function ub_review_order_shortcode($atts){
 	if(!is_user_logged_in()){
 		$display_message = 'You need to login to view this page';
 		echo ub_action_message($display_message, 'info');
-		return;
+		$output_result = ob_get_clean();
+		return $output_result;
 	}
 
 	if(isset($_GET['order_type'])){
 		$order_type = esc_html($_GET['order_type']);
 	}
 
+
+
 	$current_user_id = get_current_user_id();
 	$current_page_url = get_permalink();
 	$edit_order_url = get_permalink(get_option('ubp_create_order'));
+	$cart_items = array();
+
+	$property_author_id = get_current_user_id();
+	if(ub_get_current_user_role() == 'employee'){
+		$property_author_id = get_user_meta($property_author_id, '_ub_property_manager_id', true);
+	}
+
+	$connect_cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
+	$disconnect_cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
+
+	//ub_debug($connect_cart_items);
+
+	if((isset($connect_cart_items) && (count($connect_cart_items) > 0)) || (isset($disconnect_cart_items) && (count($disconnect_cart_items) > 0))){
+		//good to process..
+	}else{
+		$display_message = 'No items found';
+		echo ub_action_message($display_message, 'info');
+		$output_result = ob_get_clean();
+		return $output_result;
+	}
 
 	if($order_type == 'connect'){
-			$cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
+			$cart_items = $connect_cart_items;
 			$review_heading = 'Review Connection Order';
 			$submit_label = 'Submit Connect';
 
@@ -34,7 +57,7 @@ function ub_review_order_shortcode($atts){
 	}
 
 	if($order_type == 'disconnect'){
-			$cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
+			$cart_items = $disconnect_cart_items;
 			$review_heading = 'Review Disconnection Order';
 			$submit_label = 'Submit Disconnect';
 
@@ -71,35 +94,35 @@ function ub_review_order_shortcode($atts){
 
 	$output_cart_items = '';
 	if(isset($cart_items) && (count($cart_items) > 0)){
-		 foreach ($cart_items as $product_id => $uti_value) {
+		 foreach ($cart_items as $property_id => $uti_value) {
 					$gas_value = 'n/a';
 					$water_value = 'n/a';
 					$electricity_value = 'n/a';
 					$total_uti_value = 0;
 					$property_address = '';
 
-					$property_address .= get_post_meta( $product_id, '_ubp_street_address', true);
-					$property_address .= '<br />'.get_post_meta( $product_id, '_ubp_city', true);
-					$property_address .= ', '.get_post_meta( $product_id, '_ubp_state', true);
-					$property_address .= '<br />'.get_post_meta( $product_id, '_ubp_zipcode', true);
+					$property_address .= get_post_meta( $property_id, '_ubp_street_address', true);
+					$property_address .= '<br />'.get_post_meta( $property_id, '_ubp_city', true);
+					$property_address .= ', '.get_post_meta( $property_id, '_ubp_state', true);
+					$property_address .= '<br />'.get_post_meta( $property_id, '_ubp_zipcode', true);
 
 
 					if(isset($uti_value['gas']) && ($uti_value['gas'] == 'yes')){
-							$gas_value = 9.99;
+							$gas_value = get_option('ub_gas_charge');
 							$total_uti_value += $gas_value;
 					}
 					if(isset($uti_value['water']) && ($uti_value['water'] == 'yes')){
-							$water_value = 9.99;
+							$water_value = get_option('ub_water_charge');
 							$total_uti_value += $water_value;
 					}
 					if(isset($uti_value['electricity']) && ($uti_value['electricity'] == 'yes')){
-							$electricity_value = 9.99;
+							$electricity_value = get_option('ubp_electricity_charge');
 							$total_uti_value += $electricity_value;
 					}
 
 					$total_order_price += $total_uti_value;
 
-					$params_url = array('ubaction' => 'doremove', 'property_id' => $product_id, '_wpnonce' => wp_create_nonce( 'action' ));
+					$params_url = array('ubaction' => 'doremove', 'property_id' => $property_id, '_wpnonce' => wp_create_nonce( 'action' ));
 					$remove_cart_item_url = esc_url( add_query_arg( $params_url, $action_url) );
 
 
@@ -110,15 +133,46 @@ function ub_review_order_shortcode($atts){
 						</div>
 						<div class="col-6 col-md-6 table-responsive">
 							<table class="table table-striped">
-								<tr><th>Gas:</th><td>'.$gas_value.'</td></tr>
-								<tr><th>Water: </th><td>'.$water_value.'</td></tr>
-								<tr><th>Electricity: </th><td>'.$electricity_value.'</td></tr>
-								<tr class="total-deposit"><th class="table-success">Total: </th><td class="table-success">'.$total_uti_value.'</td></tr>
+								<tr><th>Gas:</th><td>'.ub_currency_display($gas_value).'</td></tr>
+								<tr><th>Water: </th><td>'.ub_currency_display($water_value).'</td></tr>
+								<tr><th>Electricity: </th><td>'.ub_currency_display($electricity_value).'</td></tr>
+								<tr class="total-deposit"><th class="table-success">Total: </th><td class="table-success">'.ub_currency_display($total_uti_value).'</td></tr>
 							</table>
 						</div>
 				</div><!-- cart-order-item -->';
 				}
+		 }else{
+			 $display_message = 'No property found in cart!';
+			 echo ub_action_message($display_message, 'info');
+			 return;
 		 }
+
+		 //Process order for submitting connect and disconnect
+		 if(isset($_POST['order_submit'])){
+			 if(isset($_POST['order_submit_type']) && ($_POST['order_submit_type'] == 'connect')){
+				 	//ub_debug($cart_items);
+					if(create_new_order($cart_items, 'connect', $property_author_id)){
+						update_user_meta($current_user_id, '_ub_connect_cart_items', '');
+					}
+			 }
+
+			 if(isset($_POST['order_submit_type']) && ($_POST['order_submit_type'] == 'disconnect')){
+					//ub_debug($cart_items);
+					if(create_new_order($cart_items, 'disconnect', $property_author_id)){
+						update_user_meta($current_user_id, '_ub_disconnect_cart_items', '');
+					}
+			 }
+
+			 $redirect_page_url = get_permalink(intval(get_option('ubpid_my_order')));
+			 echo '<script type="text/javascript">window.location = "'.$redirect_page_url.'"</script>';
+
+		 }
+
+?>
+<?php
+	if(is_user_logged_in()){
+		echo do_shortcode('[ub_inner_menus]');
+	}
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
@@ -129,7 +183,7 @@ function ub_review_order_shortcode($atts){
 		<div class="ub-review-order">
 			<div class="order-heading row">
 				<div class="total-order-price col-6 col-md-6">
-					<strong>Total Order: </strong> $<?php echo $total_order_price; ?>
+					<strong>Total Order: </strong> <?php echo ub_currency_display($total_order_price); ?>
 				</div>
 				<div class="edit-order col-6 col-md-6">
 						<a href="<?php echo $edit_order_url; ?>" class="btn btn-secondary btn-sm link-edit-order">Edit Order</a>

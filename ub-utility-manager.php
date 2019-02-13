@@ -57,8 +57,9 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 			load_plugin_textdomain( 'ub-utility-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
       if(isset($_GET['addrole']) && ($_GET['addrole'] == 'do')){
-        add_role( 'property_manager', 'Property Manager', array( 'read' => true, 'level_2' => true ) );
-        add_role( 'homeowner', 'Homeowner', array( 'read' => true, 'level_2' => true ) );
+        //add_role( 'property_manager', 'Property Manager', array( 'read' => true, 'level_2' => true ) );
+        //add_role( 'homeowner', 'Homeowner', array( 'read' => true, 'level_2' => true ) );
+				add_role( 'employee', 'Employee', array( 'read' => true, 'level_1' => true ) );
         //remove_role( 'homewoner' );
       }
 
@@ -71,6 +72,8 @@ if ( ! class_exists( 'ub_utility_manager' ) ) {
 			wp_enqueue_style('ub-manager-front');
 			wp_register_style('ub-bootstrap', UBUMANAGER_FOLDER_URL. 'css/bootstrap.min.css' );
 			wp_enqueue_style('ub-bootstrap');
+
+			wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' );	
 
 			wp_register_script( 'jquery-validation', UBUMANAGER_FOLDER_URL. 'js/jquery.validate.min.js', array( 'jquery' ), '5.0.0', true );
 			wp_enqueue_script( 'jquery-validation' );

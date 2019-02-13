@@ -9,7 +9,8 @@ function ub_login_form_shortcode($atts){
 	if(is_user_logged_in()){
 		$display_message = 'You are already logged in.';
 		echo ub_action_message($display_message, 'info');
-		return;
+		$output_result = ob_get_clean();
+		return $output_result;
 	}
 
 	if($redirect != ''){
@@ -49,7 +50,7 @@ function ub_login_form_shortcode($atts){
 		<div class="ub-form-header">
 				<h2>Login</h2>
 		</div><!-- ub-form-header -->
-		<a class="button new-user-signup" href="<?php echo get_permalink(intval(get_option('ubp_create_account'))); ?>?account-signup=dosignup">New User? Sign Up ></a>
+		<a class="button new-user-signup" href="<?php echo get_permalink(intval(get_option('ubpid_create_account'))); ?>?account-signup=dosignup">New User? Sign Up ></a>
 		<?php wp_login_form( $args ); ?>
 
 	<div><!-- ub-form-content -->
