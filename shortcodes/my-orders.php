@@ -27,6 +27,9 @@ function ub_my_orders_shortcode($atts){
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>Connection Orders</h2>
+		</div>
 		<form action="" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-4">
@@ -62,9 +65,6 @@ function ub_my_orders_shortcode($atts){
 
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="5">Connection Orders</td>
-		</tr>
-		<tr>
 			<td>Street Address</td>
 			<td>City</td>
 			<td>Zipcode</td>
@@ -73,9 +73,10 @@ function ub_my_orders_shortcode($atts){
 		</tr>
 
 	  <?php
-
+	$paged = 1;
 	$args = array(
 		'post_type' => 'ub_order',
+		'paged' => $paged,
 		'tax_query' => array(
 			array(
 				'taxonomy' => 'ub_order_type',
@@ -83,7 +84,7 @@ function ub_my_orders_shortcode($atts){
 				'terms' => get_option('ubp_connect_term')
 			)
 		),
-		'posts_per_page' => -1,
+		'posts_per_page' => 10,
 		'author' => $order_author_id,
 		'orderby' => 'date',
 		'order' => 'DESC'
@@ -105,6 +106,7 @@ function ub_my_orders_shortcode($atts){
 	<?php
 	endwhile;
 	echo '</table>';
+	echo get_ub_pagination($order_posts->max_num_pages, $range = 2);
   }else{
 	  echo '</table>';
 	  echo 'No property found';
@@ -117,6 +119,9 @@ function ub_my_orders_shortcode($atts){
 
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>Disconnection Orders</h2>
+		</div>
 		<form action="" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-4">
@@ -152,9 +157,6 @@ function ub_my_orders_shortcode($atts){
 
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="5">Disconnection Orders</td>
-		</tr>
-		<tr>
 			<td>Street Address</td>
 			<td>City</td>
 			<td>Zipcode</td>
@@ -164,8 +166,10 @@ function ub_my_orders_shortcode($atts){
 
 	  <?php
 
+	$paged = 1;
 	$args = array(
 		'post_type' => 'ub_order',
+		'paged' => $paged,
 		'tax_query' => array(
 			array(
 				'taxonomy' => 'ub_order_type',
@@ -173,7 +177,7 @@ function ub_my_orders_shortcode($atts){
 				'terms' => get_option('ubp_disconnect_term')
 			)
 		),
-		'posts_per_page' => -1,
+		'posts_per_page' => 10,
 		'author' => $order_author_id,
 		'orderby' => 'date',
 		'order' => 'DESC'
@@ -195,6 +199,7 @@ function ub_my_orders_shortcode($atts){
 	<?php
 	endwhile;
 	echo '</table>';
+	echo get_ub_pagination($order_posts->max_num_pages, $range = 2);
   }else{
 	  echo '</table>';
 	  echo 'No property found';

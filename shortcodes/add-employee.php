@@ -103,7 +103,7 @@ function ub_add_employee_shortcode_func( $atts ) {
 <div class="ub-form-wrap ub-new-account">
 	<div class="ub-form-content">
 			<div class="ub-form-header">
-					<h2>New Account</h2>
+					<h2>Add Employee</h2>
 			</div>
 			<form id="account-data-form" class="form-horizontal" action="" method="post">
 			<div class="form-row">

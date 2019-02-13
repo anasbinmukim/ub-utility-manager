@@ -236,10 +236,13 @@ function ub_register_property_shortcode(){
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>Register new property</h2>
+		</div>
 	<form action="<?php echo esc_url($current_page_url); ?>" method="POST" id="registration-form">
 	<div class="row">
 		<div class="col-md-3">
-			<h4>New Property</h4>
+			<h4>Property Info</h4>
 			<div class="form-group">
 				<label for="owner_name">Owner's Name</label>
 				<input type="text" class="form-control required" id="owner_name" name="owner_name" placeholder="" value="<?php echo esc_html($owner_name); ?>">

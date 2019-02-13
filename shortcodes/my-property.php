@@ -27,6 +27,9 @@ function ub_my_property_shortcode($atts){
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+		<div class="ub-form-header">
+				<h2>My Properties</h2>
+		</div>
 <form action="" method="post">
 	<div class="form-row">
 		<div class="form-group col-md-4">
@@ -61,9 +64,6 @@ function ub_my_property_shortcode($atts){
 </form>
 
 	<table class="table table-bordered">
-		<tr>
-			<td colspan="7">My Properties</td>
-		</tr>
 		<tr>
 			<td>Street Address</td>
 			<td>City</td>

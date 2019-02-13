@@ -21,7 +21,7 @@ function ub_confirm_orders_shortcode($atts){
 		return $output_result;
 	}
 
-	$order_author_id = get_current_user_id();
+	//$order_author_id = get_current_user_id();
 	$current_page_url = get_permalink();
 
 
@@ -79,6 +79,18 @@ function ub_confirm_orders_shortcode($atts){
 
 		update_post_meta( $order_id, '_ub_order_confirm_details', $confirmation_details);
 
+		//Send notification to admin
+		$subject = 'Order #'.$order_id.' confirmed';
+		$message = 'Your request have been successfully completed.';
+		$message = '<br />Order ID: '.$order_id;
+
+		$order_creator_id = get_post_meta($order_id, '_ub_order_creator_id', true);
+		$creator_info = get_userdata($order_creator_id);
+		$creator_email = $creator_info->user_email;
+		if(is_email( $creator_email )){
+			ub_send_email($creator_email, $subject, $message);
+		}
+
 		$display_message = 'Confirmation done';
 		echo ub_action_message($display_message, 'success');
 	}
@@ -91,10 +103,10 @@ function ub_confirm_orders_shortcode($atts){
 ?>
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+	<div class="ub-form-header">
+			<h2>Connection Orders</h2>
+	</div>
 	<table class="table table-bordered">
-		<tr>
-			<td colspan="4">Connection Orders</td>
-		</tr>
 		<tr>
 			<td></td>
 			<td>Connection Date</td>
@@ -103,9 +115,10 @@ function ub_confirm_orders_shortcode($atts){
 		</tr>
 
 	  <?php
-
+	$paged = 1;
 	$args = array(
 		'post_type' => 'ub_order',
+		'paged' => $paged,
 		'tax_query' => array(
 			array(
 				'taxonomy' => 'ub_order_type',
@@ -113,7 +126,7 @@ function ub_confirm_orders_shortcode($atts){
 				'terms' => get_option('ubp_connect_term')
 			)
 		),
-		'posts_per_page' => -1,
+		'posts_per_page' => 10,
 		'orderby' => 'date',
 		'order' => 'DESC'
 	);
@@ -139,6 +152,7 @@ function ub_confirm_orders_shortcode($atts){
 	<?php
 	endwhile;
 	echo '</table>';
+	echo get_ub_pagination($order_posts->max_num_pages, $range = 2);
   }else{
 	  echo '</table>';
 	  echo 'No property found';
@@ -151,10 +165,10 @@ function ub_confirm_orders_shortcode($atts){
 
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
+	<div class="ub-form-header">
+			<h2>Disconnection Orders</h2>
+	</div>
 	<table class="table table-bordered">
-		<tr>
-			<td colspan="4">Disconnection Orders</td>
-		</tr>
 		<tr>
 			<td>View</td>
 			<td>Connection Date</td>
@@ -164,8 +178,10 @@ function ub_confirm_orders_shortcode($atts){
 
 	  <?php
 
+	$paged = 1;
 	$args = array(
 		'post_type' => 'ub_order',
+		'paged' => $paged,
 		'tax_query' => array(
 			array(
 				'taxonomy' => 'ub_order_type',
@@ -173,7 +189,7 @@ function ub_confirm_orders_shortcode($atts){
 				'terms' => get_option('ubp_disconnect_term')
 			)
 		),
-		'posts_per_page' => -1,
+		'posts_per_page' => 10,
 		'orderby' => 'date',
 		'order' => 'DESC'
 	);
@@ -199,6 +215,7 @@ function ub_confirm_orders_shortcode($atts){
 	<?php
 	endwhile;
 	echo '</table>';
+	echo get_ub_pagination($order_posts->max_num_pages, $range = 2);
 	wp_nonce_field( 'ub_order_confirm_action', 'ub_order_confirm_nonce' );
   }else{
 	  echo '</table>';
@@ -346,11 +363,11 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 		$order_confirm_header = '';
 		if($order_type == 'connect'){
 			$order_type_display = 'Connect';
-			$order_confirm_header = 'Review connection orders';
+			$order_confirm_header = 'Connection order';
 		}
 		if($order_type == 'disconnect'){
 			$order_type_display = 'Disconnect';
-			$order_confirm_header = 'Review disconnection orders';
+			$order_confirm_header = 'Disconnection order';
 		}
 
 
@@ -380,7 +397,10 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 											<tr>
 												<th width="150"><label for="f-cgas-deposit">Gas deposit</label></th>
 												<td>
-												<?php if(($gas_order > 0) && ($gas_order != 'n/a')){ ?>
+												<?php
+												if(isset($confirmation_details['gas_deposit']) && ($order_status == 'complete')){
+													echo ub_currency_display($confirmation_details['gas_deposit']);
+												}elseif(($gas_order > 0) && ($gas_order != 'n/a')){ ?>
 													<div class="input-group mb-2">
 														<div class="input-group-prepend">
 															<div class="input-group-text">$</div>
@@ -398,7 +418,10 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 											<tr>
 												<th width="150"><label for="f-celectric-deposit">Electric deposit</label></th>
 												<td>
-													<?php if(($electric_order > 0) && ($electric_order != 'n/a')){ ?>
+													<?php
+													if(isset($confirmation_details['electricity_deposit']) && ($order_status == 'complete')){
+														echo ub_currency_display($confirmation_details['electricity_deposit']);
+													}elseif(($electric_order > 0) && ($electric_order != 'n/a')){ ?>
 													<div class="input-group mb-2">
 														<div class="input-group-prepend">
 															<div class="input-group-text">$</div>
@@ -416,7 +439,10 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 											<tr>
 												<th width="150"><label for="f-water-deposit">Water deposit</label></th>
 												<td>
-													<?php if(($water_order > 0) && ($water_order != 'n/a')){ ?>
+													<?php
+													if(isset($confirmation_details['water_deposit']) && ($order_status == 'complete')){
+														echo ub_currency_display($confirmation_details['water_deposit']);
+													}elseif(($water_order > 0) && ($water_order != 'n/a')){ ?>
 													<div class="input-group mb-2">
 														<div class="input-group-prepend">
 															<div class="input-group-text">$</div>
@@ -431,6 +457,7 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 													?>
 												</td>
 											</tr>
+											<?php if($order_status != 'complete'){ ?>
 											<tr>
 												<th>Total</th>
 												<td><div class="total-deposit"><?php echo $order_total_deposit; ?></div></td>
@@ -441,11 +468,10 @@ if (!function_exists('ub_order_confirm_popup_callback')) {
 													<input type="hidden" name="order_id" value="<?php echo intval($order_id); ?>" />
 													<input type="hidden" name="order_type" value="<?php echo esc_attr($order_type); ?>" />
 													<input type="hidden" name="property_id" value="<?php echo intval($property_id); ?>" />
-													<?php if($order_status != 'complete'){ ?>
 													<input type="submit" class="btn btn-primary" name="order_confirm_submit" value="Confirm" />
-													<?php } ?>
 												</td>
 											</tr>
+											<?php } ?>
 										</table>
 									</form>
 								</div>

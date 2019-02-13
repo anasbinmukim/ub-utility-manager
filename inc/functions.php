@@ -119,8 +119,20 @@ function ub_get_current_user_role() {
 	 		update_post_meta( $order_id, '_ub_order_address', $property_address);
 	 		update_post_meta( $order_id, '_ub_order_details', $order_details);
 
+			//Order created by current user:
+			$order_creator_id = get_current_user_id();
+			update_post_meta( $order_id, '_ub_order_creator_id', $order_creator_id);
+
 	 		$order_type_value = array( $ubp_type_term_id );
 	 		wp_set_post_terms( $order_id, $order_type_value, 'ub_order_type' );
+
+			//Send notification to admin
+			$subject = 'New '.$order_type.' order received';
+			$message = 'A new order submitted to Utility Bothers.';
+			$message = '<br />Order ID: '.$order_id;
+
+			$ub_order_admin_emails = get_option('ub_order_admin_emails');
+			ub_send_email($ub_order_admin_emails, $subject, $message);
 
 
 	 	 }
@@ -248,6 +260,41 @@ function ub_get_current_user_role() {
 
 	}
 
+	if(!function_exists('get_ub_pagination')){
+		function get_ub_pagination($pages = '', $range = 2)
+		{
+			$output = '';
+			 $showitems = ($range * 2)+1;
+			 global $paged;
+			 if(empty($paged)) $paged = 1;
+			 if($pages == '')
+			 {
+				 global $wp_query;
+				 $pages = $wp_query->max_num_pages;
+				 if(!$pages)
+				 {
+					 $pages = 1;
+				 }
+			 }
+			 if(1 != $pages)
+			 {
+				 $output .= "<div class='pagination loop-pagination clearfix'>";
+				 if($paged > 1) $output .= "<a class='prev page-numbers' href='".get_pagenum_link($paged - 1)."'><span class='page-prev'></span>".__('Previous', 'ub-utility-manager')."</a>";
+
+				 for ($i=1; $i <= $pages; $i++)
+				 {
+					 if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
+					 {
+						 $output .= ($paged == $i)? "<span class='page-numbers current'>".$i."</span>":"<a href='".get_pagenum_link($i)."' class='inactive' >".$i."</a>";
+					 }
+				 }
+				 if ($paged < $pages) $output .= "<a class='next page-numbers' href='".get_pagenum_link($paged + 1)."'>".__('Next', 'ub-utility-manager')."<span class='page-next'></span></a>";
+				 $output .= "</div>\n";
+			 }
+
+			 return $output;
+		}
+	}
 
 
 
