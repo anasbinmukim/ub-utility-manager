@@ -100,13 +100,13 @@ function ub_add_employee_shortcode_func( $atts ) {
 		echo do_shortcode('[ub_inner_menus]');
 	}
 ?>
-<div class="ub-form-wrap">
-	<div class="ub-form-content ub-new-account">
-		<form id="account-data-form" class="form-horizontal" action="" method="post">
-			<div class="row">
-				<h4>New Account</h4>
+<div class="ub-form-wrap ub-new-account">
+	<div class="ub-form-content">
+			<div class="ub-form-header">
+					<h2>New Account</h2>
 			</div>
-			<div class="row">
+			<form id="account-data-form" class="form-horizontal" action="" method="post">
+			<div class="form-row">
 				<div class="col-md-12">
 					<div class="form-group form-row">
 						<label for="account_type" class="col-md-6">Account Type:</label>
