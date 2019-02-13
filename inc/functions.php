@@ -278,7 +278,7 @@ function ub_get_current_user_role() {
 			 }
 			 if(1 != $pages)
 			 {
-				 $output .= "<div class='pagination loop-pagination clearfix'>";
+				 $output .= "<div class='ub-pagination ub-loop-pagination clearfix'>";
 				 if($paged > 1) $output .= "<a class='prev page-numbers' href='".get_pagenum_link($paged - 1)."'><span class='page-prev'></span>".__('Previous', 'ub-utility-manager')."</a>";
 
 				 for ($i=1; $i <= $pages; $i++)
