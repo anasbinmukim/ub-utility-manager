@@ -17,13 +17,29 @@ function ub_review_order_shortcode($atts){
 		$order_type = esc_html($_GET['order_type']);
 	}
 
+
+
 	$current_user_id = get_current_user_id();
 	$current_page_url = get_permalink();
 	$edit_order_url = get_permalink(get_option('ubp_create_order'));
 	$cart_items = array();
 
+	$connect_cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
+	$disconnect_cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
+
+	//ub_debug($connect_cart_items);
+
+	if((isset($connect_cart_items) && (count($connect_cart_items) > 0)) || (isset($disconnect_cart_items) && (count($disconnect_cart_items) > 0))){
+		//good to process..
+	}else{
+		$display_message = 'No items found';
+		echo ub_action_message($display_message, 'info');
+		$output_result = ob_get_clean();
+		return $output_result;
+	}
+
 	if($order_type == 'connect'){
-			$cart_items = get_the_author_meta( '_ub_connect_cart_items', $current_user_id );
+			$cart_items = $connect_cart_items;
 			$review_heading = 'Review Connection Order';
 			$submit_label = 'Submit Connect';
 
@@ -36,7 +52,7 @@ function ub_review_order_shortcode($atts){
 	}
 
 	if($order_type == 'disconnect'){
-			$cart_items = get_the_author_meta( '_ub_disconnect_cart_items', $current_user_id );
+			$cart_items = $disconnect_cart_items;
 			$review_heading = 'Review Disconnection Order';
 			$submit_label = 'Submit Disconnect';
 
@@ -72,7 +88,7 @@ function ub_review_order_shortcode($atts){
 	$total_order_price = 0;
 
 	$output_cart_items = '';
-	if(isset($cart_items) && (count($cart_items) > 1)){
+	if(isset($cart_items) && (count($cart_items) > 0)){
 		 foreach ($cart_items as $property_id => $uti_value) {
 					$gas_value = 'n/a';
 					$water_value = 'n/a';

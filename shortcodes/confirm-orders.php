@@ -86,7 +86,7 @@ function ub_confirm_orders_shortcode($atts){
 	<div class="ub-form-content">
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="5">Connection Orders</td>
+			<td colspan="4">Connection Orders</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -146,7 +146,7 @@ function ub_confirm_orders_shortcode($atts){
 	<div class="ub-form-content">
 	<table class="table table-bordered">
 		<tr>
-			<td colspan="5">Disconnection Orders</td>
+			<td colspan="4">Disconnection Orders</td>
 		</tr>
 		<tr>
 			<td>View</td>

@@ -137,6 +137,10 @@ function ub_utility_manager_account_form_shortcode_func( $atts ) {
 			$accounttype = 'administrator';
 		}
 
+		if((ub_get_current_user_role() == 'employee')){
+			$accounttype = 'employee';
+		}
+
 
 
 		if(($submission_type == 'new') && ($meta_data_update)){

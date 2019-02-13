@@ -51,48 +51,13 @@ function ub_manage_employees_shortcode($atts){
 		echo do_shortcode('[ub_inner_menus]');
 	}
 ?>
-<div class="ub-form-wrap ub-new-connction-order">
+<div class="ub-form-wrap">
 	<div class="ub-form-content">
-		<div class="only-heading">
-				<h2><?php //echo $submitting_heading; ?></h2>
+		<div class="ub-form-header">
+				<h2>My Employees</h2>
 		</div>
-		<form action="" method="post">
-			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label for="ub_name">Name</label>
-					<input type="text" class="form-control" name="ub_name" id="ub_name">
-				</div>
-				<div class="form-group col-md-3">
-					<label for="city">City</label>
-					<input type="text" class="form-control" name="city" id="city">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="zipcode">Zipcode</label>
-					<input type="text" class="form-control" name="zipcode" id="zipcode">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="city">State</label>
-					<select class="form-control" name="state">
-						<option value="">State</option>
-						<?php
-							global $states_full_key;
-							foreach($states_full_key as $key => $value){
-								echo '<option value="'. $key .'">'. $value. '</option>';
-							}
-						?>
-					</select>
-				</div>
-				<div class="form-group col-md-1">
-					<label for="" class="search-label">Search</label>
-					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
-				</div>
-			</div>
-		</form>
 <div class="conn-dis-order">
 	<table class="table table-bordered">
-		<tr>
-			<td colspan="3" align="center">My Employees</td>
-		</tr>
 		<tr>
 			<td>Name</td>
 			<td>Email</td>

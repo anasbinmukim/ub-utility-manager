@@ -57,7 +57,7 @@ function ub_connect_disconnect_order_shortcode($atts){
 		}
 
 		//ub_debug($total_cart_items);
-		$review_order_url = get_permalink(get_option('ubp_review_order'));
+		$review_order_url = get_permalink(get_option('ubpid_review_order'));
 
 		if($connection_type == 'connect'){
 				update_user_meta($current_user_id, '_ub_connect_cart_items', $total_cart_items);
