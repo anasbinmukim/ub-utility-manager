@@ -23,3 +23,5 @@ require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/review-order.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/manage-employees.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/add-employee.php');
 require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/confirm-orders.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/all-properties.php');
+require_once( UBUMANAGER_BASE_FOLDER . '/shortcodes/all-orders.php');
