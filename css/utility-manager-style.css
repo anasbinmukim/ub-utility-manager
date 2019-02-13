@@ -172,7 +172,10 @@
 .ub-new-employee .label-space{
 	margin-top: 8px;
 } */
-
+.popup-overlay-bg,
+.confirm-order-popup-overlay{
+  display: none;
+}
 .popup-overlay-bg{
   position: fixed;
   background: rgba(0, 0, 0, 0.6);

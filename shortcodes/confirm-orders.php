@@ -311,12 +311,15 @@ function ub_confirm_orders_shortcode($atts){
 }
 
 function order_confirmation_popup_modal() {
+		$confirm_page_id = get_option('ubpid_confirm_order');
+		if(is_page($confirm_page_id)){
     ?>
 		<div class="popup-overlay-bg">&nbsp;</div>
 		<div class="confirm-order-popup-overlay">
-				<div class="popup-loader"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/loader.gif" alt=""/></div>
+				<div class="popup-loader"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>images/loader.gif" alt=""/></div>
 		</div>
 		<?php
+		}
 }
 add_action( 'wp_footer', 'order_confirmation_popup_modal' );
 
