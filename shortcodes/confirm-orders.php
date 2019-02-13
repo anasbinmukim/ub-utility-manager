@@ -14,6 +14,13 @@ function ub_confirm_orders_shortcode($atts){
 			return $output_result;
 	}
 
+	if(!current_user_can('manage_options')){
+		$display_message = 'You are not allowed to see this page.';
+		echo ub_action_message($display_message, 'info');
+		$output_result = ob_get_clean();
+		return $output_result;
+	}
+
 	$order_author_id = get_current_user_id();
 	$current_page_url = get_permalink();
 
