@@ -115,7 +115,11 @@ function ub_confirm_orders_shortcode($atts){
 		</tr>
 
 	  <?php
-	$paged = 1;
+	if(is_front_page()) {
+		$paged = (get_query_var('page')) ? get_query_var('page') : 1;
+	} else {
+		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	}
 	$args = array(
 		'post_type' => 'ub_order',
 		'paged' => $paged,
@@ -178,7 +182,11 @@ function ub_confirm_orders_shortcode($atts){
 
 	  <?php
 
-	$paged = 1;
+	if(is_front_page()) {
+		$paged = (get_query_var('page')) ? get_query_var('page') : 1;
+	} else {
+		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	}
 	$args = array(
 		'post_type' => 'ub_order',
 		'paged' => $paged,
