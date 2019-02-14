@@ -422,7 +422,7 @@ function ub_register_property_shortcode(){
 				?>
 				<input type="hidden" data-owner_name="<?php echo esc_attr($current_owner_name); ?>" data-phone="<?php echo esc_attr($current_owner_phone); ?>" name="update_property_id" id="update_property_id" value="<?php echo intval($update_property_id); ?>" />
 				<input type="hidden" name="property_submission_type" value="<?php echo esc_attr($property_submission_type); ?>" />
-				<?php wp_nonce_field('file_upload', 'file_upload_nonce'); ?>
+				<?php //wp_nonce_field('file_upload', 'file_upload_nonce'); ?>
 				<?php wp_nonce_field( 'ub_property_action', 'ub_property_nonce' ); ?>
 				<input type="submit" name="submit_add_property" class="btn btn-primary" value="<?php echo esc_attr($submit_button_label); ?>" />
 			</div>
@@ -461,7 +461,7 @@ function ub_register_property_shortcode(){
       });
       $(document).on('click', '.btn-upload-file', function(e){
 			e.preventDefault();
-      var val_nonce = $('#file_upload_nonce').val();
+      var val_nonce = $('#ub_property_nonce').val();
 			//var $this = $(this),
         var $this = $(this).closest("div.utility-file-wrap"),
 				nonce = val_nonce,
@@ -475,7 +475,7 @@ function ub_register_property_shortcode(){
 				return;
 			}
 
-			status.fadeIn().text('Loading...')
+			status.fadeIn().text('Uploading...')
 
 			if (window.FormData) {
 				formdata = new FormData();
@@ -490,9 +490,9 @@ function ub_register_property_shortcode(){
 			// our AJAX identifier
 			formdata.append('action', 'ubfl_file_upload');
 
-			formdata.append('nonce', nonce);
+			formdata.append('nonce', val_nonce);
 
-      var pdf_icon = '<?php echo UBUMANAGER_FOLDER_URL; ?>/images/pdf-icon.png';
+      var pdf_icon = '<?php echo UBUMANAGER_FOLDER_URL; ?>images/pdf-icon.png';
 
 			$.ajax({
 				url: ub_ajax_object.ajaxurl,
