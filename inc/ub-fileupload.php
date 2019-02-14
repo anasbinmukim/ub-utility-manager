@@ -7,7 +7,8 @@ if ( ! function_exists( 'ubfl_file_upload_callback' ) ) :
 		$data = array();
 		$attachment_ids = array();
 
-		if( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'file_upload' ) ){
+		if( isset( $_POST['nonce'] ) ){
+		//if( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'ub_property_action' ) ){
 			$files = ubReArrayFiles($_FILES['files']);
 			if ( empty($_FILES['files']) ) {
 				$data['status'] = false;
