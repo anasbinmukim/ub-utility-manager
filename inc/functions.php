@@ -119,7 +119,7 @@ function ub_get_current_user_role() {
 	 		update_post_meta( $order_id, '_ub_order_address', $property_address);
 	 		update_post_meta( $order_id, '_ub_order_details', $order_details);
 			$apply_date_db = date('Y-m-d', strtotime($apply_date));
-			update_post_meta( $order_id, '_ub_order_details', $apply_date_db);
+			update_post_meta( $order_id, '_ub_apply_date', $apply_date_db);
 
 			//Order created by current user:
 			$order_creator_id = get_current_user_id();
