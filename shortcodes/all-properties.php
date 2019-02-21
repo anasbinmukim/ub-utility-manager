@@ -130,7 +130,7 @@ function ub_all_properties_shortcode($atts){
 			</select>
 		</div>
 		<div class="form-group col-md-1">
-			<label for="">Search</label>
+			<label for="" class="search-label">Search</label>
 			<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
 		</div>
 	</div>

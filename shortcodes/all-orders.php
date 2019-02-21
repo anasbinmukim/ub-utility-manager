@@ -122,7 +122,7 @@ function ub_all_orders_shortcode($atts){
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 		<div class="ub-form-header">
-				<h2>All Orders</h2>
+			<h2>Order Look Up</h2>
 		</div>
 		<form action="<?php echo $current_page_url; ?>" method="get">
 			<div class="form-row">
@@ -175,7 +175,7 @@ function ub_all_orders_shortcode($atts){
 					<input type="text" class="ub-datepicker" name="date_to" value="<?php echo esc_attr($date_to); ?>" /><!--<i class="fa fa-angle-down" aria-hidden="true"></i>-->
 				</div>
 				<div class="form-group col-md-1">
-					<label for="">Search</label>
+					<label for="" class="search-label">Search</label>
 					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
 				</div>
 			</div>
