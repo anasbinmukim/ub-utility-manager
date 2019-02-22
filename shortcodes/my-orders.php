@@ -18,61 +18,18 @@ function ub_my_orders_shortcode($atts){
 	if(ub_get_current_user_role() == 'employee'){
 		$order_author_id = get_user_meta($order_author_id, '_ub_property_manager_id', true);
 	}
-
-?>
-<?php
+	
 	if(is_user_logged_in()){
 		echo do_shortcode('[ub_inner_menus]');
 	}
-?>
-<div class="ub-form-wrap">
-	<div class="ub-form-content">
-		<div class="ub-form-header">
-				<h2>Connection Orders</h2>
-		</div>
-		<form action="" method="post">
-			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label for="street_address">Street Address</label>
-					<input type="text" class="form-control" name="street_address" id="street_address">
-				</div>
-				<div class="form-group col-md-3">
-					<label for="city">City</label>
-					<input type="text" class="form-control" name="city" id="city">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="zipcode">Zipcode</label>
-					<input type="text" class="form-control" name="zipcode" id="zipcode">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="city">State</label>
-					<select class="form-control" name="state">
-						<option value="">State</option>
-						<?php
-							global $states_full_key;
-							foreach($states_full_key as $key => $value){
-								echo '<option value="'. $key .'">'. $value. '</option>';
-							}
-						?>
-					</select>
-				</div>
-				<div class="form-group col-md-1">
-					<label for="">Search</label>
-					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
-				</div>
-			</div>
-		</form>
-
-	<table class="table table-bordered">
-		<tr>
-			<td>Street Address</td>
-			<td>City</td>
-			<td>Zipcode</td>
-			<td>State</td>
-			<td>Status</td>
-		</tr>
-
-	  <?php
+	
+	$current_page_url = get_permalink();
+	
+	$street_address = '';
+	$city = '';
+	$zipcode = '';
+	$state = '';
+	
 	if(is_front_page()) {
 		$paged = (get_query_var('page')) ? get_query_var('page') : 1;
 	} else {
@@ -93,6 +50,102 @@ function ub_my_orders_shortcode($atts){
 		'orderby' => 'date',
 		'order' => 'DESC'
 	);
+	
+	$args['meta_query']['relation'] = 'AND';
+	
+	if(isset($_GET['search_property']) && (isset($_GET['street_address']) && $_GET['street_address'] != '')){
+		$street_address = $_GET['street_address'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $street_address,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['search_property']) && (isset($_GET['city']) && $_GET['city'] != '')){
+		$city = $_GET['city'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $city,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['search_property']) && (isset($_GET['zipcode']) && $_GET['zipcode'] != '')){
+		$zipcode = $_GET['zipcode'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $zipcode,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['search_property']) && (isset($_GET['state']) && $_GET['state'] != '')){
+		$state = $_GET['state'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $state,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+?>
+<div class="ub-form-wrap">
+	<div class="ub-form-content">
+		<div class="ub-form-header">
+			<h2>Connection Orders</h2>
+		</div>
+		<?php //ub_debug($args); ?>
+		<form action="<?php echo $current_page_url; ?>" method="get">
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="street_address">Street Address</label>
+					<input type="text" class="form-control" name="street_address" id="street_address" value="<?php echo esc_attr($street_address); ?>">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="city">City</label>
+					<input type="text" class="form-control" name="city" id="city" value="<?php echo esc_attr($city); ?>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="zipcode">Zipcode</label>
+					<input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo esc_attr($zipcode); ?>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="city">State</label>
+					<select class="form-control" name="state">
+						<option value="">State</option>
+						<?php
+							global $states_full_key;
+							foreach($states_full_key as $key => $value){
+								echo '<option '.selected($state, $key).' value="'. $key .'">'. $value. '</option>';
+							}
+						?>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="" class="search-label">Search</label>
+					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
+				</div>
+			</div>
+		</form>
+
+	<table class="table table-bordered">
+		<tr>
+			<td>Street Address</td>
+			<td>City</td>
+			<td>Zipcode</td>
+			<td>State</td>
+			<td>Status</td>
+		</tr>
+
+	  <?php
 
 	$order_posts = new WP_Query($args);
 	if($order_posts->have_posts()){
@@ -121,60 +174,12 @@ function ub_my_orders_shortcode($atts){
 	</div><!-- ub-form-content -->
 </div><!-- ub-form-wrap -->
 
-<div class="ub-form-wrap">
-	<div class="ub-form-content">
-		<div class="ub-form-header">
-				<h2>Disconnection Orders</h2>
-		</div>
-		<form action="" method="post">
-			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label for="street_address">Street Address</label>
-					<input type="text" class="form-control" name="street_address" id="street_address">
-				</div>
-				<div class="form-group col-md-3">
-					<label for="city">City</label>
-					<input type="text" class="form-control" name="city" id="city">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="zipcode">Zipcode</label>
-					<input type="text" class="form-control" name="zipcode" id="zipcode">
-				</div>
-				<div class="form-group col-md-2">
-					<label for="city">State</label>
-					<select class="form-control" name="state">
-						<option value="">State</option>
-						<?php
-							global $states_full_key;
-							foreach($states_full_key as $key => $value){
-								echo '<option value="'. $key .'">'. $value. '</option>';
-							}
-						?>
-					</select>
-				</div>
-				<div class="form-group col-md-1">
-					<label for="">Search</label>
-					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
-				</div>
-			</div>
-		</form>
-
-	<table class="table table-bordered">
-		<tr>
-			<td>Street Address</td>
-			<td>City</td>
-			<td>Zipcode</td>
-			<td>State</td>
-			<td>Status</td>
-		</tr>
-
-	  <?php
-
-	if(is_front_page()) {
-		$paged = (get_query_var('page')) ? get_query_var('page') : 1;
-	} else {
-		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-	}
+<?php
+	$dis_street_address = '';
+	$dis_city = '';
+	$dis_zipcode = '';
+	$dis_state = '';
+	
 	$args = array(
 		'post_type' => 'ub_order',
 		'paged' => $paged,
@@ -190,6 +195,103 @@ function ub_my_orders_shortcode($atts){
 		'orderby' => 'date',
 		'order' => 'DESC'
 	);
+	
+	$args['meta_query']['relation'] = 'AND';
+	
+	if(isset($_GET['dis_search_property']) && (isset($_GET['dis_street_address']) && $_GET['dis_street_address'] != '')){
+		$dis_street_address = $_GET['dis_street_address'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $dis_street_address,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['dis_search_property']) && (isset($_GET['dis_city']) && $_GET['dis_city'] != '')){
+		$dis_city = $_GET['dis_city'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $dis_city,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['dis_search_property']) && (isset($_GET['dis_zipcode']) && $_GET['dis_zipcode'] != '')){
+		$dis_zipcode = $_GET['dis_zipcode'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $dis_zipcode,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+	
+	if(isset($_GET['dis_search_property']) && (isset($_GET['dis_state']) && $_GET['dis_state'] != '')){
+		$dis_state = $_GET['dis_state'];
+		$args['meta_query'][] = 
+			array(
+				'key' => '_ub_order_address',
+				'value' => $dis_state,
+				'type' => 'CHAR',
+				'compare' => 'LIKE'
+			);
+	}
+
+?>
+
+<div class="ub-form-wrap">
+	<div class="ub-form-content">
+		<div class="ub-form-header">
+			<h2>Disconnection Orders</h2>
+		</div>
+		<form action="<?php echo $current_page_url; ?>" method="get">
+			<div class="form-row">
+				<div class="form-group col-md-4">
+					<label for="dis_street_address">Street Address</label>
+					<input type="text" class="form-control" name="dis_street_address" id="dis_street_address" value="<?php echo esc_attr($dis_street_address); ?>">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="dis_city">City</label>
+					<input type="text" class="form-control" name="dis_city" id="dis_city" value="<?php echo esc_attr($dis_city); ?>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="dis_zipcode">Zipcode</label>
+					<input type="text" class="form-control" name="dis_zipcode" id="dis_zipcode" value="<?php echo esc_attr($dis_zipcode); ?>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="dis_state">State</label>
+					<select class="form-control" name="dis_state">
+						<option value="">State</option>
+						<?php
+							global $states_full_key;
+							foreach($states_full_key as $key => $value){
+								echo '<option '.selected($dis_state, $key).' value="'. $key .'">'. $value. '</option>';
+							}
+						?>
+					</select>
+				</div>
+				<div class="form-group col-md-1">
+					<label for="" class="search-label">Search</label>
+					<button type="submit" class="btn btn-default" name="dis_search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
+				</div>
+			</div>
+		</form>
+
+	<table class="table table-bordered">
+		<tr>
+			<td>Street Address</td>
+			<td>City</td>
+			<td>Zipcode</td>
+			<td>State</td>
+			<td>Status</td>
+		</tr>
+
+	  <?php
 
 	$order_posts = new WP_Query($args);
 	if($order_posts->have_posts()){

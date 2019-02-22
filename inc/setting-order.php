@@ -20,6 +20,7 @@ function utility_manager_order_settings_page(){
 		update_option( 'ubpid_review_order', intval($_POST['ubpid_review_order']));
 		update_option( 'ubpid_my_order', intval($_POST['ubpid_my_order']));
 		update_option( 'ubpid_confirm_order', intval($_POST['ubpid_confirm_order']));
+		update_option( 'ubpid_all_orders', intval($_POST['ubpid_all_orders']));
 		update_option( 'ub_gas_charge', sanitize_text_field($_POST['ub_gas_charge']));
 		update_option( 'ub_water_charge', sanitize_text_field($_POST['ub_water_charge']));
 		update_option( 'ubp_electricity_charge', sanitize_text_field($_POST['ubp_electricity_charge']));
@@ -96,6 +97,21 @@ function utility_manager_order_settings_page(){
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
 							<option <?php selected($ubpid_confirm_order, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('All Orders', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubpid_all_orders" id="ubpid_all_orders">
+						<?php
+							$ubpid_all_orders = intval(get_option('ubpid_all_orders'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubpid_all_orders, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>

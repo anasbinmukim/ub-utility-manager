@@ -120,22 +120,24 @@
 .inner-menu-wrap .main-menu a{font-size: 20px; font-style: italic; color: #232323;}
 .inner-menu-wrap .sub-menu li a{font-size: 14px; font-style: italic; color: #232323;}
 
-.ub-new-connction-order select.form-control:not([size]):not([multiple]) {
+.ub-form-wrap select.form-control:not([size]):not([multiple]) {
     height: 30px;
 	padding: 0;
 }
-.ub-new-connction-order button[name=search_property]{
+.ub-form-wrap button[name=search_property],
+.ub-form-wrap button[name=dis_search_property]{
 	padding: 0 3px;
 	background-image: linear-gradient(to right, #EAFFE6 , #C0EAE1);
 }
-.ub-new-connction-order button img {
+.ub-form-wrap button img {
     max-width: 88%;
     margin-top: 4px;
+	margin-left: 2px;
 }
 .ub-new-connction-order table tr:first-child{
 	background-image: linear-gradient(to right, #EAFFE6 , #C0EAE1);
 }
-.ub-new-connction-order .form-row .search-label{
+.ub-form-wrap .form-row .search-label{
 	color: #FDFDFD;
 }
 .ub-new-connction-order .ub-date-picker{
@@ -150,6 +152,9 @@
     padding-left: 7px;
     height: 28px;
     padding-top: 4px;
+}
+.ub-form-wrap input[type=text] {
+    border-radius: 3px;
 }
 .ub-new-connction-order .btn-secondary{
 	padding: 4px 15px;

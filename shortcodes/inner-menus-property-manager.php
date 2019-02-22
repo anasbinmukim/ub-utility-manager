@@ -11,6 +11,7 @@
 			<ul class="sub-menu">
 				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_register_property')));  ?>">Add/Remove Properties</a></li>
 				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_view_property')));  ?>">View My Properties</a></li>
+				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_all_properties')));  ?>">All Properties Look Up</a></li>
 			</ul>
 		</li>
 		<li class="main-menu"><a href="<?php echo esc_url(get_permalink(get_option('ubpid_my_order')));  ?>">Orders</a><i class="fa fa-angle-down"></i>
@@ -20,6 +21,7 @@
 				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_my_order')));  ?>">View Orders</a></li>
 				<?php if(current_user_can('manage_options')){ ?>
 				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_confirm_order')));  ?>">Manage Orders</a></li>
+				<li><a href="<?php echo esc_url(get_permalink(get_option('ubpid_all_orders')));  ?>">All Orders Look Up</a></li>
 				<?php } ?>
 			</ul>
 		</li>

@@ -112,7 +112,7 @@ function ub_all_orders_shortcode($atts){
 		$args['tax_query'] = array(
 			array(
 				'taxonomy' => 'ub_order_type',
-				'field' => 'slug',
+				'field' => 'term_id',
 				'terms' => $con_dis_con
 			)
 		);
@@ -122,7 +122,7 @@ function ub_all_orders_shortcode($atts){
 <div class="ub-form-wrap">
 	<div class="ub-form-content">
 		<div class="ub-form-header">
-				<h2>All Orders</h2>
+			<h2>Order Look Up</h2>
 		</div>
 		<form action="<?php echo $current_page_url; ?>" method="get">
 			<div class="form-row">
@@ -160,10 +160,16 @@ function ub_all_orders_shortcode($atts){
 			<div class="form-row">
 				<div class="form-group col-md-3">
 					<label for="con_dis_con">Connect/Disconnect</label>
+						<?php $all_terms = get_terms(array(
+								'taxonomy' => 'ub_order_type',
+								'hide_empty' => false
+							)); 					
+						?>
 					<select class="form-control" name="con_dis_con">
-						<option value="">All</option>				
-						<option <?php selected($con_dis_con, 'connect'); ?> value="connect">Connect</option>				
-						<option <?php selected($con_dis_con, 'disconnect'); ?> value="disconnect">Disconnect</option>				
+						<option value="">All</option>
+							<?php foreach($all_terms as $terms){
+								echo '<option '.selected($con_dis_con, $terms->term_id).' value="'. $terms->term_id .'">'. $terms->name. '</option>';
+							} ?>										
 					</select>
 				</div>
 				<div class="form-group col-md-3">
@@ -175,7 +181,7 @@ function ub_all_orders_shortcode($atts){
 					<input type="text" class="ub-datepicker" name="date_to" value="<?php echo esc_attr($date_to); ?>" /><!--<i class="fa fa-angle-down" aria-hidden="true"></i>-->
 				</div>
 				<div class="form-group col-md-1">
-					<label for="">Search</label>
+					<label for="" class="search-label">Search</label>
 					<button type="submit" class="btn btn-default" name="search_property"><img src="<?php echo UBUMANAGER_FOLDER_URL; ?>/images/search-icon.png" alt=""/></button>
 				</div>
 			</div>
@@ -193,7 +199,7 @@ function ub_all_orders_shortcode($atts){
 		</tr>
 
 	  <?php
-
+	//ub_debug($all_terms);
 	$order_posts = new WP_Query($args);
 	if($order_posts->have_posts()){
 	while($order_posts->have_posts()): $order_posts->the_post();

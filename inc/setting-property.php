@@ -20,6 +20,7 @@ function utility_manager_property_settings_page(){
 		update_option( 'ubpid_create_account', intval($_POST['ubpid_create_account']));
 		update_option( 'ubpid_add_employee', intval($_POST['ubpid_add_employee']));
 		update_option( 'ubpid_manage_employee', intval($_POST['ubpid_manage_employee']));
+		update_option( 'ubpid_all_properties', intval($_POST['ubpid_all_properties']));
     ?>
 
     <div class="updated"><p><?php echo esc_html__('Successfully Updated', 'ub-utility-manager'); ?></p></div>
@@ -106,6 +107,21 @@ function utility_manager_property_settings_page(){
 						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
 						<?php foreach ( $pages as $page ) {	?>
 							<option <?php selected($ubpid_manage_employee, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php echo esc_html__('All Properties', 'ub-utility-manager'); ?></th>
+				<td>
+					<select name="ubpid_all_properties" id="ubpid_all_properties">
+						<?php
+							$ubpid_all_properties = intval(get_option('ubpid_all_properties'));
+						?>
+						<option value="">
+						<?php echo esc_attr( esc_html__( 'Select page', 'ub-utility-manager' ) ); ?></option>
+						<?php foreach ( $pages as $page ) {	?>
+							<option <?php selected($ubpid_all_properties, $page->ID); ?> value="<?php echo $page->ID; ?>"><?php echo $page->post_title; ?></option>
 						<?php } ?>
 					</select>
 				</td>
