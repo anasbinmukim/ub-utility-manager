@@ -153,6 +153,9 @@
     height: 28px;
     padding-top: 4px;
 }
+.ub-form-wrap input[type=text] {
+    border-radius: 3px;
+}
 .ub-new-connction-order .btn-secondary{
 	padding: 4px 15px;
 }
